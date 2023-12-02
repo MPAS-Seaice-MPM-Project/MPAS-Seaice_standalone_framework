@@ -5,15 +5,13 @@ import os
 
 def get_testcase_data():
 
-    nCellsArray = [10242, 163842, 2562, 40962]
+    reses = [2562, 10242, 40962, 163842]
 
     dirName = "https://web.lcrc.anl.gov/public/e3sm/mpas_standalonedata/mpas-seaice/testcases/strain_stress_divergence/"
 
-    for nCells in nCellsArray:
+    for res in reses:
 
-        # grid file
-        filename = "grid.%i.nc" %(nCells)
-
+        filename = "grid.%i.nc" %(res)
         if (not os.path.isfile(filename)):
 
             args = ["wget", dirName+filename]
@@ -23,9 +21,7 @@ def get_testcase_data():
             while process.poll() is None:
                 line = process.stdout.readline()
 
-        # graph file
-        filename = "graph.%i.info" %(nCells)
-
+        filename = "graph.%i.info" %(res)
         if (not os.path.isfile(filename)):
 
             args = ["wget", dirName+filename]

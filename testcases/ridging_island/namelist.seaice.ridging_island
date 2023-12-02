@@ -55,6 +55,7 @@
     config_use_dynamics = true
     config_use_velocity_solver = true
     config_use_advection = true
+    config_use_mpm = false
     config_use_forcing = false
     config_use_column_package = true
     config_use_prescribed_ice = false
@@ -102,6 +103,15 @@
     config_conservation_check = false
     config_monotonicity_check = false
     config_recover_tracer_means_check = false
+/
+&mpm
+    config_mpm_nParticles = 8192
+    config_mpm_particle_init_type = 'number'
+    config_mpm_particle_posn_init_type = 'even'
+    config_mpm_particle_init_number = 9
+    config_mpm_particle_block_size = 1024
+    config_mpm_advection_test = false
+    config_mpm_assembly_test = false
 /
 &column_package
     config_use_column_shortwave = false

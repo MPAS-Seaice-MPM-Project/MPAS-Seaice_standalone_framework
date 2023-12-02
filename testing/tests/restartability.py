@@ -39,6 +39,7 @@ def restartability(mpasDevelopmentDir,
     nmlChanges = {"seaice_model": {"config_run_duration":'24:00:00'}}
     if (check):
         nmlChanges["unit_test"] = {"config_testing_system_test":True}
+    nmlChanges = add_pio_namelist_changes(nmlChanges, nProcs)
 
     streamChanges = [{"streamName":"restart", "attributeName":"output_interval", "newValue":"24:00:00"}, \
                      {"streamName":"output" , "attributeName":"output_interval", "newValue":"none"}]
@@ -64,6 +65,7 @@ def restartability(mpasDevelopmentDir,
     nmlChanges = {"seaice_model": {"config_run_duration":'12:00:00'}}
     if (check):
         nmlChanges["unit_test"] = {"config_testing_system_test":True}
+    nmlChanges = add_pio_namelist_changes(nmlChanges, nProcs)
 
     streamChanges = [{"streamName":"restart", "attributeName":"output_interval", "newValue":"12:00:00"}, \
                      {"streamName":"output" , "attributeName":"output_interval", "newValue":"none"}]
@@ -111,6 +113,7 @@ def restartability(mpasDevelopmentDir,
 
     if (check):
         nmlChanges["unit_test"] = {"config_testing_system_test":True}
+    nmlChanges = add_pio_namelist_changes(nmlChanges, nProcs)
 
     streamChanges = []
 
