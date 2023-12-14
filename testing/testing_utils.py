@@ -159,6 +159,15 @@ def create_new_namelist(filenameIn, filenameOut, nmlPatch):
     f90nml.patch(filenameIn, nmlPatch, filenameOut)
 
 #-------------------------------------------------------------------------
+
+def add_pio_namelist_changes(nmlChanges, nProcs):
+
+    nmlChanges["io"] = {"config_pio_num_iotasks":1,
+                        "config_pio_stride":nProcs}
+
+    return nmlChanges
+
+#-------------------------------------------------------------------------
 # streams manupulation
 #-------------------------------------------------------------------------
 

@@ -8,4 +8,5 @@ namelist.*
 streams.*
 log.*
 *graph.info*
+*graph.*.info*
 restart_timestamp

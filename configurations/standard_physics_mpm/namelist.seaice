@@ -6,6 +6,17 @@
     config_run_duration = '00-00-01_00:00:00'
     config_num_halos = 2
 /
+&mpm
+    config_use_mpm_polympo = false
+    config_mpm_nParticles = 0
+    config_mpm_particle_init_type = 'number'
+    config_mpm_particle_posn_init_type = 'xyprojection'
+    config_mpm_particle_init_number = 9
+    config_mpm_particle_block_size = 4096
+    config_mpm_advection_test = false
+    config_mpm_assembly_test = false
+    config_mpm_polympo_init_test =false
+/
 &io
     config_pio_num_iotasks = 0
     config_pio_stride = 1
@@ -52,14 +63,14 @@
     config_calculate_coriolis = true
 /
 &use_sections
-    config_use_dynamics = false
+    config_use_dynamics = true
     config_use_velocity_solver = true
+    config_use_mpm = true
     config_use_advection = true
-    config_use_mpm = false
     config_use_forcing = true
     config_use_column_package = true
-    config_use_prescribed_ice = true
-    config_use_prescribed_ice_forcing = true
+    config_use_prescribed_ice = false
+    config_use_prescribed_ice_forcing = false
 /
 &forcing
     config_atmospheric_forcing_type = 'CORE'
@@ -104,20 +115,11 @@
     config_monotonicity_check = false
     config_recover_tracer_means_check = false
 /
-&mpm
-    config_mpm_nParticles = 8192
-    config_mpm_particle_init_type = 'number'
-    config_mpm_particle_posn_init_type = 'even'
-    config_mpm_particle_init_number = 9
-    config_mpm_particle_block_size = 1024
-    config_mpm_advection_test = false
-    config_mpm_assembly_test = false
-/
 &column_package
     config_use_column_shortwave = true
     config_use_column_vertical_thermodynamics = true
     config_use_column_biogeochemistry = false
-    config_use_column_itd_thermodynamics = false
+    config_use_column_itd_thermodynamics = true
     config_use_column_ridging = true
     config_use_column_snow_tracers = false
 /
@@ -485,7 +487,7 @@
     config_AM_timeSeriesStatsMonthly_write_on_startup = false
     config_AM_timeSeriesStatsMonthly_compute_interval = 'dt'
     config_AM_timeSeriesStatsMonthly_output_stream = 'timeSeriesStatsMonthlyOutput'
-    config_AM_timeSeriesStatsMonthly_restart_stream = 'none'
+    config_AM_timeSeriesStatsMonthly_restart_stream = 'timeSeriesStatsMonthlyRestart'
     config_AM_timeSeriesStatsMonthly_operation = 'avg'
     config_AM_timeSeriesStatsMonthly_reference_times = 'initial_time'
     config_AM_timeSeriesStatsMonthly_duration_intervals = 'repeat_interval'
