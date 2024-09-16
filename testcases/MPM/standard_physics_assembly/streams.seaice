@@ -47,6 +47,9 @@
         <var name="indexToCellIDMP"/>
         <var name="procIDParticle"/>
         <var name="posnMP"/>
+        <var name="iceAreaMP"/>
+        <var name="iceVolMP"/>
+        <var name="snowVolMP"/>
 </stream>
 
 
