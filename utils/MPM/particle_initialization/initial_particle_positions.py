@@ -350,7 +350,7 @@ def place_particles(posnMP,
            if (iVertexOnCell < nEdgesOnCell - 1):
               v2[0] = xvert[iVertexOnCell + 1]
            else:
-              v2[0] = xvert[1]
+              v2[0] = xvert[0]
            v3[0] = xCell
            x = (v1[0] + v2[0] + v3[0])/3.0
 
@@ -358,7 +358,7 @@ def place_particles(posnMP,
            if (iVertexOnCell < nEdgesOnCell - 1):
               v2[1] = yvert[iVertexOnCell + 1]
            else:
-              v2[1] = yvert[1]
+              v2[1] = yvert[0]
            v3[1] = yCell
            y = (v1[1] + v2[1] + v3[1])/3.0
 
@@ -366,7 +366,7 @@ def place_particles(posnMP,
            if (iVertexOnCell < nEdgesOnCell - 1):
               v2[2] = zvert[iVertexOnCell + 1]
            else:
-              v2[2] = zvert[1]
+              v2[2] = zvert[0]
            v3[2] = zCell
            z = (v1[2] + v2[2] + v3[2])/3.0
 
