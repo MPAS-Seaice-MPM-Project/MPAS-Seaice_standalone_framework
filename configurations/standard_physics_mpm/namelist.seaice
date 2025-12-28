@@ -90,7 +90,7 @@
     config_elastic_subcycle_number = 120
     config_strain_scheme = 'mpm'
     config_constitutive_relation_type = 'evp'
-    config_stress_divergence_scheme = 'variational'
+    config_stress_divergence_scheme = 'mpm'
     config_variational_basis = 'wachspress'
     config_variational_denominator_type = 'original'
     config_wachspress_integration_type = 'dunavant'
