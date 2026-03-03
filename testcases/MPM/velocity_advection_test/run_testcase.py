@@ -34,7 +34,7 @@ def run_testcase(logFilename=None):
     #reses = ["2562"]
     forceTypes = ["cos_lat"]
     DynamicsTimeStep = [3600.0, 1800.0, 900.0, 450.0]
-    rotateCartesianGrid = True
+    rotateCartesianGrid = False
     earthRadius = 6371229.0
 
     #usePolympos = [False, True]

@@ -37,9 +37,9 @@ def grid_rotation_forward(x, y, z, rotateCartesianGrid):
 def latlon_from_xyz(x, y, z, r):
 
 # given xyz coordinates determine the latitude and longitude
-
+    R = math.sqrt(x*x + y*y + z*z)
     lon = math.atan2(y, x)
-    lat = math.asin(z/r)
+    lat = math.asin(z/R)
 
     return lat, lon
 
@@ -207,8 +207,8 @@ def create_ics(earthRadius, rotateCartesianGrid):
                                        xVertex[iVertex], yVertex[iVertex], zVertex[iVertex],
                                        earthRadius, rotateCartesianGrid)
 
-                airStressVertexU[iVertex] = 40.0 * iceDensity * stressx
-                airStressVertexV[iVertex] = 40.0 * iceDensity * stressy
+                airStressVertexU[iVertex] = (40.0 * 40.0) * iceDensity * stressx
+                airStressVertexV[iVertex] = (40.0 * 40.0) * iceDensity * stressy
 
 
             var = fileOut.createVariable("airStressVertexU","d",dimensions=["nVertices"])
