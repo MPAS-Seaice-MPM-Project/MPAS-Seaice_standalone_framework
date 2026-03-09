@@ -29,6 +29,7 @@
 	<var name="iceVolumeCategory"/>
         <var name="deluDyn"/>
         <var name="uvVelMP"/>
+	<var name="airStressVertexU"/>
 	<var name="airStressVertexV"/>
 </stream>
 

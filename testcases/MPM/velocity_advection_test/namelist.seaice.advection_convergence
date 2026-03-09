@@ -85,7 +85,7 @@
 /
 &velocity_solver
     config_dynamics_subcycle_number = 1
-    config_rotate_cartesian_grid = false
+    config_rotate_cartesian_grid = true
     config_include_metric_terms = true
     config_elastic_subcycle_number = 120
     config_strain_scheme = 'mpm'
