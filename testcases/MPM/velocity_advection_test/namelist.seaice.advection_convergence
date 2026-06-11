@@ -50,7 +50,7 @@
     config_initial_velocity_type = 'none'
     config_initial_uvelocity = 0.0
     config_initial_vvelocity = 0.0
-    config_calculate_coriolis = true
+    config_calculate_coriolis = false
 /
 &use_sections
     config_use_dynamics = true
@@ -89,8 +89,8 @@
     config_include_metric_terms = true
     config_elastic_subcycle_number = 120
     config_strain_scheme = 'mpm'
-    config_constitutive_relation_type = 'linear'
-    config_stress_divergence_scheme = 'variational'
+    config_constitutive_relation_type = 'evp'
+    config_stress_divergence_scheme = 'mpm'
     config_variational_basis = 'wachspress'
     config_variational_denominator_type = 'original'
     config_wachspress_integration_type = 'dunavant'
