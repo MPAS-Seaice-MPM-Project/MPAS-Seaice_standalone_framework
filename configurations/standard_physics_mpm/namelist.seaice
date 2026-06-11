@@ -119,7 +119,7 @@
     config_use_mpm_polympo = false
     config_mpm_create_particles = true
     config_mpm_particle_init_type = 'number'
-    config_mpm_particle_posn_init_type = 'xyprojection'
+    config_mpm_particle_posn_init_type = 'reference_equal_area'
     config_mpm_particle_init_number = 9
     config_mpm_particle_block_size = 4096
     config_mpm_assembly_test = false
