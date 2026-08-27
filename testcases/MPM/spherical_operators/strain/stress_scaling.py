@@ -146,11 +146,14 @@ def get_norm_particle(filenameIC, filename, latitudeLimit):
 
     latParticle = fileMPAS.variables["latCellMP"][:]
 
-    stressMP = fileMPAS.variables["stressMP"][:]
+    stressTimesThicknessMP = fileMPAS.variables["stressTimesThicknessMP"][:]
 
-    normE11 = L2_norm_particle(stressMP[0,:,0], stressAnalyticalMP[:,0], nParticles, latParticle[0,:], latitudeLimit)
-    normE22 = L2_norm_particle(stressMP[0,:,1], stressAnalyticalMP[:,1], nParticles, latParticle[0,:], latitudeLimit)
-    normE12 = L2_norm_particle(stressMP[0,:,2], stressAnalyticalMP[:,2], nParticles, latParticle[0,:], latitudeLimit)
+    normE11 = L2_norm_particle(stressTimesThicknessMP[0,:,0],
+                               stressAnalyticalMP[:,0], nParticles, latParticle[0,:], latitudeLimit)
+    normE22 = L2_norm_particle(stressTimesThicknessMP[0,:,1],
+                               stressAnalyticalMP[:,1], nParticles, latParticle[0,:], latitudeLimit)
+    normE12 = L2_norm_particle(stressTimesThicknessMP[0,:,2], 
+                               stressAnalyticalMP[:,2], nParticles, latParticle[0,:], latitudeLimit)
 
     fileMPAS.close()
 

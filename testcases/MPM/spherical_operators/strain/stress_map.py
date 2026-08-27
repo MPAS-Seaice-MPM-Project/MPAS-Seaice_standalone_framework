@@ -82,9 +82,9 @@ def stress_map():
 
     fileMPM = Dataset("./output_mpm_40962/particles_output.2000-01-01_01.00.00.nc","r")
 
-    stress11 = fileMPM.variables["stressMP"][0,:,0]
-    stress22 = fileMPM.variables["stressMP"][0,:,1]
-    stress12 = fileMPM.variables["stressMP"][0,:,2]
+    stress11 = fileMPM.variables["stressTimesThicknessMP"][0,:,0]
+    stress22 = fileMPM.variables["stressTimesThicknessMP"][0,:,1]
+    stress12 = fileMPM.variables["stressTimesThicknessMP"][0,:,2]
 
     stress11Diff = stress11 - stress11AnalyticalMP
     stress22Diff = stress22 - stress22AnalyticalMP

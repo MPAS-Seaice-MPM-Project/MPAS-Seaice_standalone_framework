@@ -51,7 +51,7 @@
    <var name="lonCellMP"/>
    <var name="uvVelMP"/>
    <var name="strainRateMP"/>
-   <var name="stressMP"/>
+   <var name="stressTimesThicknessMP"/>
 </stream>
 
 <stream name="output"
