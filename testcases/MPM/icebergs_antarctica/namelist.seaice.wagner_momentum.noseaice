@@ -120,14 +120,16 @@
     config_mpm_particle_init_type = 'number'
     config_mpm_particle_posn_init_type = 'xyprojection'
     config_mpm_particle_init_number = 9
-    config_mpm_particle_block_size = 4096
+    config_mpm_particle_minimum_array_size = 16
+    config_mpm_particle_array_growth_factor = 1.5
     config_mpm_assembly_test = false
     config_mpm_polympo_init_test = false
 /
 &mpm_icebergs
     config_iceberg_read_in_from_file_at_start = false
     config_iceberg_initial_height = 250.0
-    config_mpm_iceberg_block_size = 128
+    config_iceberg_minimum_array_size = 16
+    config_iceberg_array_growth_factor = 1.5
     config_minimum_iceberg_area = 1e6
     config_maximum_iceberg_area = 1e6
     config_iceberg_area_pdf_exponent_physical = -1.5

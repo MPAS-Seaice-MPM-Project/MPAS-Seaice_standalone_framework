@@ -13,13 +13,19 @@ tests = [{"name":"regression"     , "needsBase":True,  "description":"Tests whet
 colour_init()
 
 # command line arguments
+mpasDevDirDefault = "../development/MPAS-Seaice-MPM/components/mpas-seaice/"
+mpasBaseDirDefault = "../base/MPAS-Seaice-MPM/components/mpas-seaice/"
+standDevDirDefault = "../development/MPAS-Seaice_standalone_framework/"
+standBaseDirDefault = "../base/MPAS-Seaice_standalone_framework/"
+testsuiteDefault = "../development/MPAS-Seaice_standalone_framework/testing/testsuites/testsuite.all.xml"
+
 parser = argparse.ArgumentParser(description='Test MPAS-Seaice')
 
-parser.add_argument("-d", "--dev",           required=True,  dest="mpasDevelopmentDir",                 help="MPAS development directory to test")
-parser.add_argument("-b", "--base",          required=False, dest="mpasBaseDir",                        help="MPAS base directory to compare against")
-parser.add_argument("--sd", "--SADev",       required=True,  dest="SAFrameDirDev",                      help="")
-parser.add_argument("--sb", "--SABase",      required=False, dest="SAFrameDirBase",                     help="")
-parser.add_argument("-t", "--testsuite",     required=False, dest="testSuite",                          help="Input test suite xml file")
+parser.add_argument("-d", "--dev",           required=False, default=mpasDevDirDefault,   dest="mpasDevelopmentDir", help="MPAS development directory to test")
+parser.add_argument("-b", "--base",          required=False, default=mpasBaseDirDefault,  dest="mpasBaseDir",        help="MPAS base directory to compare against")
+parser.add_argument("--sd", "--SADev",       required=False, default=standDevDirDefault,  dest="SAFrameDirDev",      help="MPAS development standalone framework directory to test")
+parser.add_argument("--sb", "--SABase",      required=False, default=standBaseDirDefault, dest="SAFrameDirBase",     help="MPAS base standalone framework directory to compare against")
+parser.add_argument("-t", "--testsuite",     required=False, default=testsuiteDefault,    dest="testSuite",          help="Input test suite xml file")
 parser.add_argument("-o", "--domainsdir",    required=False, dest="domainsDir",                         help="Domains directory")
 parser.add_argument("-a", "--avail",         required=False, dest="avail",         action='store_true', help="Print available tests to stdout")
 parser.add_argument("-c", "--check",         required=False, dest="check",         action='store_true', help="Check that the testing system is working")
