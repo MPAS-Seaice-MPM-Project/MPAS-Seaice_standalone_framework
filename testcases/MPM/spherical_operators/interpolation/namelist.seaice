@@ -119,7 +119,8 @@
     config_mpm_particle_init_type = 'number'
     config_mpm_particle_posn_init_type = 'even'
     config_mpm_particle_init_number = 9
-    config_mpm_particle_block_size = 1024
+    config_mpm_particle_minimum_array_size = 16
+    config_mpm_particle_array_growth_factor = 1.5
     config_mpm_interpolation_test = true
     config_mpm_assembly_test = false
     config_mpm_polympo_init_test = false
