@@ -37,14 +37,14 @@
         filename_interval="00-00-00_00:00:01"
         clobber_mode="replace_files"
         output_interval="00-00-01_00:00:00" >
-
+   <var name="xtime"/>
    <var name="statusMP"/>
    <var name="iCellMP"/>
-        <var name="cellIDCreationMP"/>
-        <var name="creationIndexMP"/>
-        <var name="indexToCellIDMP"/>
-        <var name="procIDParticle"/>
-        <var name="posnMP"/>
+   <var name="cellIDCreationMP"/>
+   <var name="creationIndexMP"/>
+   <var name="indexToCellIDMP"/>
+   <var name="procIDParticle"/>
+   <var name="posnMP"/>
 </stream>
 
 <immutable_stream name="LYqSixHourlyForcing"
