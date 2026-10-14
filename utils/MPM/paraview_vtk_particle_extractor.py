@@ -53,13 +53,17 @@ def fractional_year_noleap(time_str):
 
 #-------------------------------------------------------------------------------
 
-def print_vtp_file(filenameIn, filenameOut, variable_names):
+def print_vtp_file(filenameIn,
+                   filenameOut,
+                   variable_names,
+                   nParticlesDimName,
+                   posnMPVarName):
 
     iTime = 0
     filein = Dataset(filenameIn,"r")
     sphere_radius = filein.sphere_radius
-    nParticles = len(filein.dimensions["nParticles"])
-    posnMP = filein.variables["posnMP"][:]
+    nParticles = len(filein.dimensions[nParticlesDimName])
+    posnMP = filein.variables[posnMPVarName][:]
 
     try:
         xtime = str(chartostring(filein.variables["xtime"][iTime,:]))
@@ -232,7 +236,11 @@ if __name__ == "__main__":
     parser.add_argument('-f', "--file_pattern", required=True, dest='filenameTemplate',
                         help='filename template for particle files')
     parser.add_argument("-v", "--variable_list", required=True, dest="variable_list",
-                        help="List of variables to extract")
+                        help="List of variables to extract"),
+    parser.add_argument("-d", "--dim_name", default="nParticles", dest="nParticlesDimName",
+                        help="Name of the particle dimension")
+    parser.add_argument("-p", "--pos_name", default="posnMP", dest="posnMPVarName",
+                        help="Name of the particle position variable name")
     args = parser.parse_args()
 
     # all time-series files received from command line after -f
@@ -307,13 +315,17 @@ if __name__ == "__main__":
         filenameOut = "./vtk_files/time_series/fieldsOnParticles_%d.vtp" %(iFile)
 
         # write vtp files in vtk_files/time_series/
-        nValid, xtimeYear = print_vtp_file(filenameIn, filenameOut, variable_names)
+        nValid, xtimeYear = print_vtp_file(filenameIn,
+                                           filenameOut,
+                                           variable_names,
+                                           args.nParticlesDimName,
+                                           args.posnMPVarName)
         print(filenameOut, nValid, xtimeYear)
 
         # write the header for the vtp files
         time_index = iFile
         vtp_file_prefix = "time_series/{}_{:d}".format(out_prefix,
-                                                           time_index)
+                                                       time_index)
         file_name = '{}/{}.vtp'.format(out_dir, vtp_file_prefix)
         if (xtimeYear is not None):
             real_time = xtimeYear
