@@ -21,10 +21,8 @@
         filename_interval="none"
         input_interval="initial_only">
 
-        <var name="uVelocity"/>
-        <var name="vVelocity"/>
-        <var name="delvDyn"/>
-	<var name="solveVelocityPrevious"/>
+        <var name="iceAreaVertex"/>
+        <var name="iceAreaCell"/>
 </stream>
 
 <immutable_stream name="restart"
@@ -43,8 +41,8 @@
 
 	<var name="xtime"/>
 	<var name="daysSinceStartOfSim"/>
-	<var name="uVelocityInitial"/>
-	<var name="vVelocityInitial"/>
+	<var name="iceAreaVertex"/>
+	<var name="iceAreaCell"/>
 </stream>
 
 <stream name="particlesOut"
@@ -61,7 +59,6 @@
         <var name="indexToCellIDMP"/>
         <var name="procIDParticle"/>
         <var name="posnMP"/>
-        <var name="uvVelMP"/>
         <var name="latCellMP"/>
 </stream>
 

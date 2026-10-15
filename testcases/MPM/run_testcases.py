@@ -25,7 +25,6 @@ def run_testcases(optional=False):
         "spherical_operators/interpolation",
         "spherical_operators/reconstruction",
         "spherical_operators/interpolation_cell",
-        "spherical_operators/reconstruction_cell",
         "standard_physics"
     ]
     testCaseDirsOptional = [

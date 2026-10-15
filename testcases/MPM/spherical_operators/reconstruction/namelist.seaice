@@ -41,7 +41,7 @@
 /
 &initialize
     config_earth_radius = 1.0
-    config_initial_condition_type = 'uniform'
+    config_initial_condition_type = 'none'
     config_initial_ice_area = 1.0
     config_initial_ice_volume = 1.0
     config_initial_snow_volume = 0.0
@@ -125,6 +125,7 @@
 /
 &column_package
     config_column_physics_type = 'icepack'
+    config_column_element_type = 'particles'
     config_use_column_shortwave = true
     config_use_column_vertical_thermodynamics = true
     config_use_column_biogeochemistry = false
