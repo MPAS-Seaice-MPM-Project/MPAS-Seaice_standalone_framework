@@ -66,7 +66,7 @@ def create_square_quad_mesh(nx, ny,
                     iycc >= ny):
                     iCell = -1
                 else:
-                    iCell = ixcc*nx + iycc
+                    iCell = ixcc*ny + iycc
 
                 cellsOnVertex[iVertex, iCellOnVertex] = iCell+1
 
