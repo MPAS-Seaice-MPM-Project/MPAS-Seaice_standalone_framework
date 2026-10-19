@@ -88,6 +88,8 @@
         <var name="icebergVolume"/>
         <var name="icebergAge"/>
         <var name="icebergSpeed"/>
+        <var name="totalCalvingRate"/>
+        <var name="totalMeltRate"/>
 </stream>
 
 <stream name="icebergsCalving"

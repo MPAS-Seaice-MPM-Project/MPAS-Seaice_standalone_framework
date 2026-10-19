@@ -10,8 +10,10 @@ from iceberg_plot_utils import plot_cell_field
 def iceberg_meltrates(filenameTemplate,
                       location):
 
-    gigatonneToKg = 1e12
-    perYearToPerSecond = 1.0 / (365*24*3600)
+    gigaTonneToKg = 1.0e9 * 1.0e3
+    yearToSecond = 60.0 * 60.0 * 24.0 * 365.0
+    kgToGigaTonne = 1.0 / gigaTonneToKg
+    secondToYear = 1.0 / yearToSecond
 
     # load mesh data
     fileMesh = Dataset("grid.nc", "r")
@@ -47,6 +49,13 @@ def iceberg_meltrates(filenameTemplate,
 
     icebergMeltRateCell[:] /= nAvg
 
+    totalDischarge = 0.0
+    for iCell in range(0,nCells):
+        totalDischarge += icebergMeltRateCell[iCell] * areaCell[iCell]
+
+    totalDischarge *= kgToGigaTonne * yearToSecond
+    print("totalDischarge: ", totalDischarge, " Gt/year")
+
     plot_cell_field(icebergMeltRateCell,
                     "Iceberg melting",
                     r'Melt flux ($\mathrm{kg}/\mathrm{m}^2/\mathrm{s}$)',
@@ -62,13 +71,6 @@ def iceberg_meltrates(filenameTemplate,
                     verticesOnCell,
                     latVertex,
                     lonVertex)
-
-    totalDischarge = 0.0
-    for iCell in range(0,nCells):
-        totalDischarge += icebergMeltRateCell[iCell] * areaCell[iCell]
-
-    totalDischarge /= (gigatonneToKg * perYearToPerSecond)
-    print("totalDischarge: ",totalDischarge)
 
 #-------------------------------------------------------------------------------
 
