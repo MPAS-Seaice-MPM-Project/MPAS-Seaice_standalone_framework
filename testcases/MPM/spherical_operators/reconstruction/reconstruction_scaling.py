@@ -191,12 +191,12 @@ def reconstruction_scaling():
                 if (not os.path.exists(filenameIC)):
                     raise Exception("Missing IC file: %s" %(filenameIC))
 
-                norm = get_norm_vertex(filenameIC, filename, filenameMesh, latitudeLimit)
-                norm = get_norm_cell(filenameIC, filename, filenameMesh, latitudeLimit)
+                norm_vertex = get_norm_vertex(filenameIC, filename, filenameMesh, latitudeLimit)
+                norm_cell = get_norm_cell(filenameIC, filename, filenameMesh, latitudeLimit)
 
                 x.append(get_resolution(filenameMesh, latitudeLimit))
-                yVertex.append(norm)
-                yCell.append(norm)
+                yVertex.append(norm_vertex)
+                yCell.append(norm_cell)
 
             axes[0].loglog(x,yVertex, marker='o', color=lineColours[iPlot], ls=lineStyles[iPlot], markersize=5.0)
             print('iceAreaVertex', x, yVertex)
