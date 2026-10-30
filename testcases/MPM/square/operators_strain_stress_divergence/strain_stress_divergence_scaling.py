@@ -135,7 +135,8 @@ def scaling_lines(axis, xMin, xMax, yMin):
 def strain_stress_divergence_scaling():
 
     # options
-    operatorMethods = ["wachspress","pwl","weak","weakwachs","weakpwl","wachsavg","pwlavg","mpmvar","mpmweak"]
+    #operatorMethods = ["wachspress","pwl","weak","weakwachs","weakpwl","wachsavg","pwlavg","mpmvar","mpmweak"]
+    operatorMethods = ["wachspress","weak","mpmvar","mpmweak","mpmmpm"]
 
     gridTypes = ["hex","quad"]
     #gridTypes = ["quad"]
@@ -163,7 +164,8 @@ def strain_stress_divergence_scaling():
                    "wachsavg":"purple",
                    "pwlavg":"orange",
                    "mpmvar":"cyan",
-                   "mpmweak":"olive"}
+                   "mpmweak":"olive",
+                   "mpmmpm":"silver"}
 
     lineStyles = {"hex":"solid",
                   "quad":"dashed"}
@@ -176,7 +178,8 @@ def strain_stress_divergence_scaling():
                     "wachsavg":"Wachs. Avg.",
                     "pwlavg":"PWL Avg.",
                     "mpmvar":"MPM Var",
-                    "mpmweak":"MPM Weak"}
+                    "mpmweak":"MPM Weak",
+                    "mpmmpm":"MPM MPM"}
 
     stressDivergenceLabels = {"U":r"(a) $(\nabla \cdot \sigma)_u$",
                               "V":r"(b) $(\nabla \cdot \sigma)_v$"}

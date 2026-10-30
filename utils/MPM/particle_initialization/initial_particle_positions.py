@@ -384,15 +384,22 @@ def place_particles_in_cell(particleInitType,
                 ymin = min(ymin, yVertex[iVertex])
                 ymax = max(ymax, yVertex[iVertex])
 
-            dx = (xmax-xmin) / float(npart) / 2.0
-            dy = (ymax-ymin) / float(npart) / 2.0
+            # placement limits decrease in size by 5% so particles not on boundary
+            # of regular planar polygons
+            xminUse = xmin - 0.05 * (xmax-xmin)
+            xmaxUse = xmax + 0.05 * (xmax-xmin)
+            yminUse = ymin - 0.05 * (ymax-ymin)
+            ymaxUse = ymax + 0.05 * (ymax-ymin)
+
+            dx = (xmaxUse-xminUse) / float(npart) / 2.0
+            dy = (ymaxUse-yminUse) / float(npart) / 2.0
 
             k = 0
             for i in range(0, npart):
                 for j in range(0, npart):
 
-                    x = xmin + dx * float(2 * i + 1)
-                    y = ymin + dy * float(2 * j + 1)
+                    x = xminUse + dx * float(2 * i + 1)
+                    y = yminUse + dy * float(2 * j + 1)
                     z = 0.0
                     area = dx*dy
 
