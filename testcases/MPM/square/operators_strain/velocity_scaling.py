@@ -159,7 +159,7 @@ def velocity_scaling():
 
     velocities = ["u","v"]
 
-    operatorMethods = ["mpmvar","mpmweak"]
+    operatorMethods = ["mpmvar","mpmweak","mpmmpm"]
 
     gridTypes = ["hex","quad"]
     #gridTypes = ["quad"]
@@ -183,16 +183,20 @@ def velocity_scaling():
                "pwl_avg":"pwl",
                "weak_avg":"weak",
                "mpmvar":"mpmvar",
-               "mpmweak":"mpmweak"}
+               "mpmweak":"mpmweak",
+               "mpmmpm":"mpmmpm"}
 
     legendLabels = {"mpmvar":"MPM Var",
-                    "mpmweak":"MPM Weak"}
+                    "mpmweak":"MPM Weak",
+                    "mpmmpm":"MPM MPM"}
 
     lineColours = {"mpmvar":"black",
-                   "mpmweak":"red"}
+                   "mpmweak":"red",
+                   "mpmmpm":"blue"}
 
     markers = {"mpmvar":"o",
-               "mpmweak":"x"}
+               "mpmweak":"x",
+               "mpmmpm":"s"}
 
     lineStyles = {"hex":"solid",
                   "quad":"dashed"}

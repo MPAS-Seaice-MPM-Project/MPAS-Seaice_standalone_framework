@@ -22,9 +22,9 @@ def run_model():
     if (MPAS_SEAICE_TESTCASES_RUN_COMMAND is None):
         MPAS_SEAICE_TESTCASES_RUN_COMMAND = ""
 
-    operatorMethods = ["wachspress","pwl","weak","wachsavg","pwlavg","weakwachs","weakpwl","mpmvar","mpmweak"]
+    #operatorMethods = ["wachspress","pwl","weak","wachsavg","pwlavg","weakwachs","weakpwl","mpmvar","mpmweak"]
     #operatorMethods = ["wachsavg"]
-    #operatorMethods = ["mpmvar","mpmweak"]
+    operatorMethods = ["wachspress","weak","mpmvar","mpmweak","mpmmpm"]
 
     gridTypes = ["hex","quad"]
     #gridTypes = ["quad"]
@@ -102,6 +102,10 @@ def run_model():
                 elif (operatorMethod == "mpmweak"):
                     nmlPatch = {"velocity_solver": {"config_strain_scheme":"mpm",
                                                     "config_stress_divergence_scheme":"weak"},
+                                "use_sections": {"config_use_mpm": True}}
+                elif (operatorMethod == "mpmmpm"):
+                    nmlPatch = {"velocity_solver": {"config_strain_scheme":"mpm",
+                                                    "config_stress_divergence_scheme":"mpm"},
                                 "use_sections": {"config_use_mpm": True}}
 
                 f90nml.patch("namelist.seaice.strain_stress_divergence", nmlPatch, "namelist.seaice.%s" %(operatorMethod))

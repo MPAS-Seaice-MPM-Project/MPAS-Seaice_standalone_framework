@@ -399,7 +399,7 @@ def strain_scaling():
     strains = ["strain11","strain22","strain12"]
 
     #operatorMethods = ["wachspress","pwl","weak","mpmvar","mpmweak"]
-    operatorMethods = ["mpmvar","mpmweak"]
+    operatorMethods = ["mpmvar","mpmweak","mpmmpm"]
     #operatorMethods = ["weak"]
 
     gridTypes = ["hex","quad"]
@@ -424,7 +424,8 @@ def strain_scaling():
                "pwl_avg":"pwl",
                "weak_avg":"weak",
                "mpmvar":"mpmvar",
-               "mpmweak":"mpmweak"}
+               "mpmweak":"mpmweak",
+               "mpmmpm":"mpmmpm"}
 
     legendLabels = {"wachspress":"Wachspress",
                     "pwl":"PWL",
@@ -433,7 +434,8 @@ def strain_scaling():
                     "pwl_avg":"PWL Avg",
                     "weak_avg":"Weak Avg",
                     "mpmvar":"MPM Var",
-                    "mpmweak":"MPM Weak"}
+                    "mpmweak":"MPM Weak",
+                    "mpmmpm":"MPM MPM"}
 
     lineColours = {"wachspress":"black",
                    "pwl":"grey",
@@ -442,7 +444,8 @@ def strain_scaling():
                    "pwl_avg":"green",
                    "weak_avg":"purple",
                    "mpmvar":"cyan",
-                   "mpmweak":"olive"}
+                   "mpmweak":"olive",
+                   "mpmmpm":"silver"}
 
     markers = {"wachspress":"o",
                "pwl":"s",
@@ -451,7 +454,8 @@ def strain_scaling():
                "pwl_avg":"s",
                "weak_avg":"^",
                "mpmvar":"x",
-               "mpmweak":"x"}
+               "mpmweak":"o",
+               "mpmmpm":"s"}
 
     lineStyles = {"hex":"solid",
                   "quad":"dashed"}
@@ -522,6 +526,8 @@ def strain_scaling():
                     elif (operatorMethod == "mpmvar"):
                         normE11, normE22, normE12 = get_norm_particle(filenamePartIC,filenamePart,filename)
                     elif (operatorMethod == "mpmweak"):
+                        normE11, normE22, normE12 = get_norm_particle(filenamePartIC,filenamePart,filename)
+                    elif (operatorMethod == "mpmmpm"):
                         normE11, normE22, normE12 = get_norm_particle(filenamePartIC,filenamePart,filename)
 
                     x.append(get_resolution(filename))

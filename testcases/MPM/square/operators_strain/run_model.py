@@ -23,8 +23,7 @@ def run_model():
         MPAS_SEAICE_TESTCASES_RUN_COMMAND = ""
 
     #operatorMethods = ["wachspress","pwl","weak","mpmvar","mpmweak"]
-    operatorMethods = ["mpmvar","mpmweak"]
-    #operatorMethods = ["weak"]
+    operatorMethods = ["mpmvar","mpmweak","mpmmpm"]
 
     gridTypes = ["hex","quad"]
     #gridTypes = ["hex"]
@@ -77,6 +76,10 @@ def run_model():
                 elif (operatorMethod == "mpmweak"):
                     nmlPatch = {"velocity_solver": {"config_strain_scheme":"mpm",
                                                     "config_stress_divergence_scheme":"weak"},
+                                "use_sections": {"config_use_mpm": True}}
+                elif (operatorMethod == "mpmmpm"):
+                    nmlPatch = {"velocity_solver": {"config_strain_scheme":"mpm",
+                                                    "config_stress_divergence_scheme":"mpm"},
                                 "use_sections": {"config_use_mpm": True}}
 
                 f90nml.patch("namelist.seaice.strain", nmlPatch, "namelist.seaice.%s" %(operatorMethod))

@@ -137,12 +137,15 @@ def strain_stress_divergence_map():
     # ic hex
     fileIC = Dataset("ic_hex_0082x0094.nc","r")
 
-    uVelocity = fileIC.variables["uVelocity"][:]
-    vVelocity = fileIC.variables["vVelocity"][:]
+    uVelocityAnalytical = fileIC.variables["uVelocity"][:]
+    vVelocityAnalytical = fileIC.variables["vVelocity"][:]
 
     stressDivergenceUAnalytical = fileIC.variables["stressDivergenceUAnalytical"][:]
     stressDivergenceVAnalytical = fileIC.variables["stressDivergenceVAnalytical"][:]
 
+    print("Velocity: ",
+          np.amin(uVelocityAnalytical), np.amax(uVelocityAnalytical),
+          np.amin(vVelocityAnalytical), np.amax(vVelocityAnalytical))
     print("Stress divergence: ",
           np.amin(stressDivergenceUAnalytical), np.amax(stressDivergenceUAnalytical),
           np.amin(stressDivergenceVAnalytical), np.amax(stressDivergenceVAnalytical))
@@ -150,17 +153,26 @@ def strain_stress_divergence_map():
     fileIC.close()
 
     # Wachspress
-    fileWach = Dataset("./output_hex_wachsavg_0082x0094/output.2000.nc","r")
+    fileWach = Dataset("./output_hex_wachspress_0082x0094/output.2000.nc","r")
 
     interiorCell = fileWach.variables["interiorCell"][0,:]
+
+    uVelocityWachs = fileWach.variables["uVelocity"][0,:]
+    vVelocityWachs = fileWach.variables["vVelocity"][0,:]
 
     stressDivergenceUWach = fileWach.variables["stressDivergenceU"][0,:]
     stressDivergenceVWach = fileWach.variables["stressDivergenceV"][0,:]
 
+    uVelocityWachsDiff = (uVelocityWachs - uVelocityAnalytical)
+    vVelocityWachsDiff = (vVelocityWachs - vVelocityAnalytical)
+
     stressDivergenceUWachDiff = (stressDivergenceUWach - stressDivergenceUAnalytical)
     stressDivergenceVWachDiff = (stressDivergenceVWach - stressDivergenceVAnalytical)
 
-    print("Wachs: ",
+    print("Wachs velocity: ",
+          np.amin(uVelocityWachsDiff), np.amax(uVelocityWachsDiff),
+          np.amin(vVelocityWachsDiff), np.amax(vVelocityWachsDiff))
+    print("Wachs stressDiv: ",
           np.amin(stressDivergenceUWachDiff), np.amax(stressDivergenceUWachDiff),
           np.amin(stressDivergenceVWachDiff), np.amax(stressDivergenceVWachDiff))
 
@@ -176,76 +188,51 @@ def strain_stress_divergence_map():
                         iVertex = verticesOnCell[iCell2,iVertexOnCell]
                         useVertex[iVertex] = 0
 
-    # PWL
-    filePWL = Dataset("./output_hex_pwlavg_0082x0094/output.2000.nc","r")
-
-    stressDivergenceUPWL = filePWL.variables["stressDivergenceU"][0,:]
-    stressDivergenceVPWL = filePWL.variables["stressDivergenceV"][0,:]
-
-    stressDivergenceUPWLDiff = (stressDivergenceUPWL - stressDivergenceUAnalytical)
-    stressDivergenceVPWLDiff = (stressDivergenceVPWL - stressDivergenceVAnalytical)
-
-    print("PWL:   ",
-          np.amin(stressDivergenceUPWLDiff), np.amax(stressDivergenceUPWLDiff),
-          np.amin(stressDivergenceVPWLDiff), np.amax(stressDivergenceVPWLDiff))
-
-    filePWL.close()
-
     # Weak
     fileWeak = Dataset("./output_hex_weak_0082x0094/output.2000.nc","r")
+
+    uVelocityWeak = fileWeak.variables["uVelocity"][0,:]
+    vVelocityWeak = fileWeak.variables["vVelocity"][0,:]
 
     stressDivergenceUWeak = fileWeak.variables["stressDivergenceU"][0,:]
     stressDivergenceVWeak = fileWeak.variables["stressDivergenceV"][0,:]
 
+    uVelocityWeakDiff = (uVelocityWeak - uVelocityAnalytical)
+    vVelocityWeakDiff = (vVelocityWeak - vVelocityAnalytical)
+
     stressDivergenceUWeakDiff = (stressDivergenceUWeak - stressDivergenceUAnalytical)
     stressDivergenceVWeakDiff = (stressDivergenceVWeak - stressDivergenceVAnalytical)
 
-    print("Weak:  ",
+    print("Weak Velocity:  ",
+          np.amin(uVelocityWeakDiff), np.amax(uVelocityWeakDiff),
+          np.amin(vVelocityWeakDiff), np.amax(vVelocityWeakDiff))
+
+    print("Weak stressDiv:  ",
           np.amin(stressDivergenceUWeakDiff), np.amax(stressDivergenceUWeakDiff),
           np.amin(stressDivergenceVWeakDiff), np.amax(stressDivergenceVWeakDiff))
 
     fileWeak.close()
 
-    # Weak Wachspress
-    fileWach = Dataset("./output_hex_weakwachs_0082x0094/output.2000.nc","r")
-
-    stressDivergenceUWeakWach = fileWach.variables["stressDivergenceU"][0,:]
-    stressDivergenceVWeakWach = fileWach.variables["stressDivergenceV"][0,:]
-
-    stressDivergenceUWeakWachDiff = (stressDivergenceUWeakWach - stressDivergenceUAnalytical)
-    stressDivergenceVWeakWachDiff = (stressDivergenceVWeakWach - stressDivergenceVAnalytical)
-
-    print("Wachs: ",
-          np.amin(stressDivergenceUWeakWachDiff), np.amax(stressDivergenceUWeakWachDiff),
-          np.amin(stressDivergenceVWeakWachDiff), np.amax(stressDivergenceVWeakWachDiff))
-
-    fileWach.close()
-
-    # Weak PWL
-    filePWL = Dataset("./output_hex_weakpwl_0082x0094/output.2000.nc","r")
-
-    stressDivergenceUWeakPWL = filePWL.variables["stressDivergenceU"][0,:]
-    stressDivergenceVWeakPWL = filePWL.variables["stressDivergenceV"][0,:]
-
-    stressDivergenceUWeakPWLDiff = (stressDivergenceUWeakPWL - stressDivergenceUAnalytical)
-    stressDivergenceVWeakPWLDiff = (stressDivergenceVWeakPWL - stressDivergenceVAnalytical)
-
-    print("PWL:   ",
-          np.amin(stressDivergenceUWeakPWLDiff), np.amax(stressDivergenceUWeakPWLDiff),
-          np.amin(stressDivergenceVWeakPWLDiff), np.amax(stressDivergenceVWeakPWLDiff))
-
-    filePWL.close()
-
    # VAR MPM
     fileMPM = Dataset("./output_hex_mpmvar_0082x0094/output.2000.nc","r")
+
+    uVelocityVarMPM = fileMPM.variables["uVelocity"][0,:]
+    vVelocityVarMPM = fileMPM.variables["vVelocity"][0,:]
 
     stressDivergenceUVarMPM = fileMPM.variables["stressDivergenceU"][0,:]
     stressDivergenceVVarMPM = fileMPM.variables["stressDivergenceV"][0,:]
 
+    uVelocityVarMPMDiff = (uVelocityVarMPM - uVelocityAnalytical)
+    vVelocityVarMPMDiff = (vVelocityVarMPM - vVelocityAnalytical)
+
     stressDivergenceUVarMPMDiff = (stressDivergenceUVarMPM - stressDivergenceUAnalytical)
     stressDivergenceVVarMPMDiff = (stressDivergenceVVarMPM - stressDivergenceVAnalytical)
 
-    print("MPM VAR:   ",
+    print("MPM VAR velocity:   ",
+          np.amin(uVelocityVarMPMDiff), np.amax(uVelocityVarMPMDiff),
+          np.amin(vVelocityVarMPMDiff), np.amax(vVelocityVarMPMDiff))
+
+    print("MPM VAR stressDiv:   ",
           np.amin(stressDivergenceUVarMPMDiff), np.amax(stressDivergenceUVarMPMDiff),
           np.amin(stressDivergenceVVarMPMDiff), np.amax(stressDivergenceVVarMPMDiff))
 
@@ -254,18 +241,52 @@ def strain_stress_divergence_map():
    # Weak MPM
     fileMPM = Dataset("./output_hex_mpmweak_0082x0094/output.2000.nc","r")
 
+    uVelocityWeakMPM = fileMPM.variables["uVelocity"][0,:]
+    vVelocityWeakMPM = fileMPM.variables["vVelocity"][0,:]
+
     stressDivergenceUWeakMPM = fileMPM.variables["stressDivergenceU"][0,:]
     stressDivergenceVWeakMPM = fileMPM.variables["stressDivergenceV"][0,:]
+
+    uVelocityWeakMPMDiff = (uVelocityWeakMPM - uVelocityAnalytical)
+    vVelocityWeakMPMDiff = (vVelocityWeakMPM - vVelocityAnalytical)
 
     stressDivergenceUWeakMPMDiff = (stressDivergenceUWeakMPM - stressDivergenceUAnalytical)
     stressDivergenceVWeakMPMDiff = (stressDivergenceVWeakMPM - stressDivergenceVAnalytical)
 
-    print("MPM WEAK:   ",
+    print("MPM WEAK velocity:   ",
+          np.amin(uVelocityWeakMPMDiff), np.amax(uVelocityWeakMPMDiff),
+          np.amin(vVelocityWeakMPMDiff), np.amax(vVelocityWeakMPMDiff))
+
+    print("MPM WEAK stressDiv:   ",
           np.amin(stressDivergenceUWeakMPMDiff), np.amax(stressDivergenceUWeakMPMDiff),
           np.amin(stressDivergenceVWeakMPMDiff), np.amax(stressDivergenceVWeakMPMDiff))
 
     fileMPM.close()
 
+   # MPM MPM
+    fileMPM = Dataset("./output_hex_mpmmpm_0082x0094/output.2000.nc","r")
+
+    uVelocityMPMMPM= fileMPM.variables["uVelocity"][0,:]
+    vVelocityMPMMPM = fileMPM.variables["vVelocity"][0,:]
+
+    stressDivergenceUMPMMPM= fileMPM.variables["stressDivergenceU"][0,:]
+    stressDivergenceVMPMMPM = fileMPM.variables["stressDivergenceV"][0,:]
+
+    uVelocityMPMMPMDiff = (uVelocityMPMMPM - uVelocityAnalytical)
+    vVelocityMPMMPMDiff = (vVelocityMPMMPM - vVelocityAnalytical)
+
+    stressDivergenceUMPMMPMDiff = (stressDivergenceUMPMMPM - stressDivergenceUAnalytical)
+    stressDivergenceVMPMMPMDiff = (stressDivergenceVMPMMPM - stressDivergenceVAnalytical)
+
+    print("MPM MPM velocity:   ",
+          np.amin(uVelocityMPMMPMDiff), np.amax(uVelocityMPMMPMDiff),
+          np.amin(vVelocityMPMMPMDiff), np.amax(vVelocityMPMMPMDiff))
+
+    print("MPM MPM stressDiv:   ",
+          np.amin(stressDivergenceUMPMMPMDiff), np.amax(stressDivergenceUMPMMPMDiff),
+          np.amin(stressDivergenceVMPMMPMDiff), np.amax(stressDivergenceVMPMMPMDiff))
+
+    fileMPM.close()
 
     mpl.rc('font', family='Times New Roman', size=8)
     mpl.rc('text', usetex=True)
@@ -274,6 +295,9 @@ def strain_stress_divergence_map():
     minVelocity = -1.0
     maxVelocity =  1.0
 
+    minVelDiff = -1.e-1
+    maxVelDiff =  1.e-1
+
     minStressDiv = -750.0
     maxStressDiv =  750.0
 
@@ -281,54 +305,63 @@ def strain_stress_divergence_map():
     maxStressDivDiff =  40.0
 
 
-    fig, axes = plt.subplots(5, 4)
+    fig, axes = plt.subplots(6, 4)
 
-    fig.set_size_inches(7, 6.75)
+    fig.set_size_inches(9, 6.75)
 
-    plot_subfigure(axes[0,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocity, minVelocity, maxVelocity, xMin, xMax, yMin, yMax, \
+    plot_subfigure(axes[0,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocityAnalytical, minVelocity, maxVelocity, xMin, xMax, yMin, yMax, \
                    False, False, r'$u^\prime$', '(a)', False)
-    plot_subfigure(axes[0,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocity, minVelocity, maxVelocity, xMin, xMax, yMin, yMax, \
+    plot_subfigure(axes[0,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocityAnalytical, minVelocity, maxVelocity, xMin, xMax, yMin, yMax, \
                    False, False, r'$v^\prime$', '(b)', False)
     plot_subfigure(axes[0,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUAnalytical, minStressDiv, maxStressDiv, xMin, xMax, yMin, yMax, \
                    False, False, r'$(\nabla \cdot \sigma)_{u^\prime}$ Analytical', r'(c)$\times20$', False)
     plot_subfigure(axes[0,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVAnalytical, minStressDiv, maxStressDiv, xMin, xMax, yMin, yMax, \
                    False, False, r'$(\nabla \cdot \sigma)_{v^\prime}$ Analytical', r'(d)$\times20$', True)
 
-    plot_subfigure(axes[1,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWachDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+    plot_subfigure(axes[1,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocityWachsDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
                    False, False, r'Wachs. ($u^\prime$ direction)', '(e)', False)
-    plot_subfigure(axes[1,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWachDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Wachs. ($v^\prime$ direction)', '(f)', False)
-    plot_subfigure(axes[1,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUPWLDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'PWL ($u^\prime$ direction)', '(g)', False)
-    plot_subfigure(axes[1,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVPWLDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'PWL ($v^\prime$ direction)', '(h)', True)
+    plot_subfigure(axes[1,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocityWachsDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Wachs. ($v^\prime$ direction)', '(f)', True)
+    plot_subfigure(axes[1,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWachDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Wachs. ($u^\prime$ direction)', '(g)', False)
+    plot_subfigure(axes[1,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWachDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Wachs. ($v^\prime$ direction)', '(h)', True)
 
-    plot_subfigure(axes[2,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWeakWachDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak Wachs. ($u^\prime$ direction)', '(i)', False)
-    plot_subfigure(axes[2,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWeakWachDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak Wachs. ($v^\prime$ direction)', '(j)', False)
-    plot_subfigure(axes[2,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWeakPWLDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak PWL ($u^\prime$ direction)', '(k)', False)
-    plot_subfigure(axes[2,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWeakPWLDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak PWL ($v^\prime$ direction)', '(l)', True)
+    plot_subfigure(axes[2,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocityWeakDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak ($u^\prime$ direction)', '(i)', False)
+    plot_subfigure(axes[2,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocityWeakDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak ($v^\prime$ direction)', '(j)', True)
+    plot_subfigure(axes[2,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWeakDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak ($u^\prime$ direction)', '(k)', False)
+    plot_subfigure(axes[2,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWeakDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak ($v^\prime$ direction)', '(l)', True)
 
-    plot_subfigure(axes[3,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWeakMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak MPM. ($u^\prime$ direction)', '(m)', False)
-    plot_subfigure(axes[3,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWeakMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak MPM. ($v^\prime$ direction)', '(n)', False)
-    plot_subfigure(axes[3,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUVarMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Var MPM. ($u^\prime$ direction)', '(o)', False)
-    plot_subfigure(axes[3,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVVarMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Var MPM. ($v^\prime$ direction)', '(p)', True)
+    plot_subfigure(axes[3,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocityMPMMPMDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'MPM MPM ($u^\prime$ direction)', '(m)', False)
+    plot_subfigure(axes[3,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocityMPMMPMDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'MPM MPM ($v^\prime$ direction)', '(n)', True)
+    plot_subfigure(axes[3,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUMPMMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'MPM MPM ($u^\prime$ direction)', '(o)', False)
+    plot_subfigure(axes[3,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVMPMMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'MPM MPM ($v^\prime$ direction)', '(p)', True)
 
-    plot_subfigure(axes[4,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWeakDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak ($u^\prime$ direction)', '(q)', False)
-    plot_subfigure(axes[4,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWeakDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
-                   False, False, r'Weak ($v^\prime$ direction)', '(r)', True)
-    axes[4,2].axis('off')
-    axes[4,3].axis('off')
+    plot_subfigure(axes[4,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocityWeakMPMDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak MPM. ($u^\prime$ direction)', '(q)', False)
+    plot_subfigure(axes[4,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocityWeakMPMDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak MPM. ($v^\prime$ direction)', '(r)', True)
+    plot_subfigure(axes[4,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUWeakMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak MPM. ($u^\prime$ direction)', '(s)', False)
+    plot_subfigure(axes[4,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVWeakMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Weak MPM. ($v^\prime$ direction)', '(t)', True)
 
-
+    plot_subfigure(axes[5,0], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, uVelocityVarMPMDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Var MPM. ($u^\prime$ direction)', '(u)', False)
+    plot_subfigure(axes[5,1], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, vVelocityVarMPMDiff, minVelDiff, maxVelDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Var MPM. ($v^\prime$ direction)', '(v)', True)
+    plot_subfigure(axes[5,2], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceUVarMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Var MPM. ($u^\prime$ direction)', '(w)', False)
+    plot_subfigure(axes[5,3], fig, nVertices, vertexDegree, cellsOnVertex, xCell, yCell, zCell, useVertex, latVertex, stressDivergenceVVarMPMDiff, minStressDivDiff, maxStressDivDiff, xMin, xMax, yMin, yMax, \
+                   False, False, r'Var MPM. ($v^\prime$ direction)', '(x)', True)
 
     #plt.tight_layout(pad=0.5, w_pad=0.5, h_pad=0.5)
     plt.savefig("strain_stress_divergence_map.png",dpi=400)
