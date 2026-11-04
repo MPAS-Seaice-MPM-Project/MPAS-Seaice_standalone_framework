@@ -22,23 +22,32 @@
         filename_interval="01-00-00_00:00:00"
         clobber_mode="replace_files"
         output_interval="00-00-00_01:00:00" >
-	<var name="xtime"/>
-	<var name="daysSinceStartOfSim"/>
-	<var name="iceAreaCell"/>
-	<var name="iceVolumeCell"/>
-	<var name="snowVolumeCell"/>
-	<var name="iceAreaCategory"/>
-	<var name="iceVolumeCategory"/>
-	<var name="snowVolumeCategory"/>
-	<var name="uVelocity"/>
-	<var name="vVelocity"/>
-	<var name="uAirVelocity"/>
-	<var name="vAirVelocity"/>
-	<var name="uOceanVelocity"/>
-	<var name="vOceanVelocity"/>
+        <var name="xtime"/>
+        <var name="daysSinceStartOfSim"/>
+        <var name="iceAreaCell"/>
+        <var name="iceVolumeCell"/>
+        <var name="snowVolumeCell"/>
+        <var name="iceAreaCategory"/>
+        <var name="iceVolumeCategory"/>
+        <var name="snowVolumeCategory"/>
+        <var name="uVelocity"/>
+        <var name="vVelocity"/>
+        <var name="uAirVelocity"/>
+        <var name="vAirVelocity"/>
+        <var name="uOceanVelocity"/>
+        <var name="vOceanVelocity"/>
         <var name="categoryThicknessLimits"/>
         <var name="divergence"/>
         <var name="shear"/>
+        <var name="icePressure"/>
+        <var name="stressDivergenceU"/>
+        <var name="stressDivergenceV"/>
+        <var name="airStressCellU"/>
+        <var name="airStressCellV"/>
+        <var name="airStressVertexU"/>
+        <var name="airStressVertexV"/>
+        <var name="oceanStressU"/>
+        <var name="oceanStressV"/>
 </stream>
 
 <stream name="initialConditions"
@@ -47,27 +56,27 @@
         filename_interval="none"
         input_interval="initial_only">
 
-	<var name="iceAreaCell"/>
-	<var name="iceVolumeCell"/>
-	<var name="iceAreaCategory"/>
-	<var name="iceVolumeCategory"/>
-	<var name="fVertex"/>
-	<var name="uAirVelocity"/>
-	<var name="vAirVelocity"/>
+        <var name="iceAreaCell"/>
+        <var name="iceVolumeCell"/>
+        <var name="iceAreaCategory"/>
+        <var name="iceVolumeCategory"/>
+        <var name="fVertex"/>
+        <var name="uAirVelocity"/>
+        <var name="vAirVelocity"/>
 </stream>
 
 <immutable_stream name="airHourlyVelocitiesForcing"
                   type="input"
                   filename_template="atmosphere_forcing_hourly.$Y.nc"
                   filename_interval="0001-00-00_00:00:00"
-		  reference_time="2000-01-01_01:00:00"
+                  reference_time="2000-01-01_01:00:00"
                   input_interval="none" />
 
 <immutable_stream name="oceanHourlyVelocitiesForcing"
                   type="input"
                   filename_template="ocean_forcing_hourly.$Y.nc"
                   filename_interval="0001-00-00_00:00:00"
-		  reference_time="2000-01-01_01:00:00"
+                  reference_time="2000-01-01_01:00:00"
                   input_interval="none" />
 
 <stream name="abort_block"

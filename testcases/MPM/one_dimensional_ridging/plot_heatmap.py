@@ -52,7 +52,7 @@ def plot_heatmap(gridFilename,
 
     maxThickness = 4.0
 
-    yVal = 505000.0
+    yVal = 55000.0
 
     fileGrid = Dataset(gridFilename,"r")
 

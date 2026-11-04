@@ -3,13 +3,13 @@
     config_calendar_type = 'noleap'
     config_start_time = '2000-01-01_00:00:00'
     config_stop_time = 'none'
-    config_run_duration = '100_00:00:00'
+    config_run_duration = '30_00:00:00'
     config_num_halos = 3
 /
 &io
     config_pio_num_iotasks = 0
     config_pio_stride = 1
-    config_write_output_on_startup = false
+    config_write_output_on_startup = true
     config_test_case_diag = false
     config_test_case_diag_type = 'none'
     config_full_abort_write = true
@@ -150,7 +150,7 @@
     config_use_ice_age = true
     config_use_first_year_ice = true
     config_use_level_ice = true
-    config_use_level_meltponds = true
+    config_use_level_meltponds = false
     config_use_sealevel_meltponds = true
     config_use_topo_meltponds = false
     config_use_aerosols = false

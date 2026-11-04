@@ -15,30 +15,33 @@ from plot_heatmap import plot_heatmap
 import os
 import argparse
 
+lxDefault = 1000000.0
+lyDefault = 100000.0
+nxDefault = 100
+nyDefault = 10
+dcDefault = 10000.0
+
 #-------------------------------------------------------------------------------
 
 def run_testcase(runtype,
-                 meshtype):
+                 meshtype,
+                 lx=lxDefault,
+                 ly=lyDefault,
+                 nx=nxDefault,
+                 ny=nyDefault,
+                 dc=dcDefault):
 
     print("Create grid...")
-    lx = 1000000.0
-    ly = 1000000.0
-
     x0 = 0.0
     y0 = 0.0
 
     if (meshtype == "quad"):
-
-        nx = 100
-        ny = 100
 
         gridFilename = create_square_quad_mesh(nx, ny,
                                                lx, ly,
                                                x0, y0)
 
     elif (meshtype == "hex"):
-
-        dc = 10000.0
 
         gridFilename = create_square_hex_mesh(dc,
                                               lx, ly,
@@ -81,10 +84,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-r', dest="runtype",  choices=["orig","mpm"], default="orig")
+    parser.add_argument('-r', dest="runtype",  choices=["orig","mpm.decoh","mpm.evp"], default="orig")
     parser.add_argument('-m', dest="meshtype", choices=["quad","hex"], default="quad")
+    parser.add_argument('--lx', dest="lx", type=float, default=lxDefault)
+    parser.add_argument('--ly', dest="ly", type=float, default=lyDefault)
+    parser.add_argument('--nx', dest="nx", type=int,   default=nxDefault)
+    parser.add_argument('--ny', dest="ny", type=int,   default=nyDefault)
+    parser.add_argument('--dc', dest="dc", type=float, default=dcDefault)
 
     args = parser.parse_args()
 
     run_testcase(args.runtype,
-                 args.meshtype)
+                 args.meshtype,
+                 args.lx,
+                 args.ly,
+                 args.nx,
+                 args.ny,
+                 args.dc)
