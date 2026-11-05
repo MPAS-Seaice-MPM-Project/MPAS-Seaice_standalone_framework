@@ -154,7 +154,7 @@ def create_forcing():
 
     varOutTime = fileout.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,nTimes):
-        timeStr = times[iTime].strftime('%Y-%m-%d_%H:%M:%S')
+        timeStr = times[iTime].isoformat(sep="_", timespec="seconds")
         varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
 
     var = fileout.createVariable("airTemperature","d",dimensions=["Time","nCells"])
@@ -187,7 +187,7 @@ def create_forcing():
 
     varOutTime = fileout.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,nTimes):
-        timeStr = times[iTime].strftime('%Y-%m-%d_%H:%M:%S')
+        timeStr = times[iTime].isoformat(sep="_", timespec="seconds")
         timeStr = "0000" + timeStr[4:]
         varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
 
@@ -214,7 +214,7 @@ def create_forcing():
 
     varOutTime = fileout.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,nTimes):
-        timeStr = times[iTime].strftime('%Y-%m-%d_%H:%M:%S')
+        timeStr = times[iTime].isoformat(sep="_", timespec="seconds")
         timeStr = "0000" + timeStr[4:]
         varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
             

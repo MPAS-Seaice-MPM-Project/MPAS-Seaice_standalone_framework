@@ -33,7 +33,7 @@ def restartability(mpasDevelopmentDir,
     runDuration2, runDurationStr2 = run_duration(runDurationInterval, 2)
 
     compareTime = startTime + runDuration2
-    compareTimeStr = compareTime.strftime("%Y-%m-%d_%H.%M.%S")
+    compareTimeStr = compareTime.isoformat(sep="_", timespec="seconds")
 
     # find available directory name
     iTest = 1
