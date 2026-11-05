@@ -29,7 +29,7 @@ def replicate_forcing():
         for iTime in range(0,nTimes):
             timeStr = b''.join(times[iTime]).decode('UTF-8').replace('\x00','')
             timeStr = yearStr + timeStr[4:]
-            var[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'))
+            var[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
 
         filein.close()
 

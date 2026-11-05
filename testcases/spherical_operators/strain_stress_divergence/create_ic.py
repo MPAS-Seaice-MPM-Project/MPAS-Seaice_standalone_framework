@@ -1,6 +1,5 @@
 from netCDF4 import Dataset
 import numpy as np
-from scipy.special import sph_harm
 import math
 from math import sin, cos, tan, pi, fabs, pow, sqrt, factorial
 

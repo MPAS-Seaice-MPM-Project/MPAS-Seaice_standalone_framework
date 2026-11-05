@@ -198,7 +198,7 @@ def create_forcing(\
     xtimes = create_output_times("monthly", 0)
     varXtime = fileOut.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,12):
-        varXtime[iTime,0:19] = netCDF4.stringtochar(np.array(xtimes[iTime], 'S19'))
+        varXtime[iTime,0:19] = netCDF4.stringtochar(np.array(xtimes[iTime], 'S19'), encoding='ascii')
         varXtime[iTime,19:] = " "*45
 
     varSST  = fileOut.createVariable("seaSurfaceTemperature",   "d",dimensions=["Time","nCells"])
