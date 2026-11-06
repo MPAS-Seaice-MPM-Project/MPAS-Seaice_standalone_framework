@@ -139,7 +139,7 @@ def create_forcing(yearStart,
         nTimes = len(xtimes)
         varXtime = fileForcing.createVariable("xtime","c",dimensions=["Time","StrLen"])
         for iTime in range(0,nTimes):
-            varXtime[iTime,0:19] = netCDF4.stringtochar(np.array(xtimes[iTime], 'S19'))
+            varXtime[iTime,0:19] = netCDF4.stringtochar(np.array(xtimes[iTime], 'S19'), encoding='ascii')
             varXtime[iTime,19:] = " "*45
 
         # loop over variables

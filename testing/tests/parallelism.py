@@ -33,7 +33,7 @@ def parallelism(mpasDevelopmentDir,
 
     # compare time
     compareTime = startTime + runDuration
-    compareTimeStr = compareTime.strftime("%Y-%m-%d_%H.%M.%S")
+    compareTimeStr = compareTime.isoformat(sep="_", timespec="seconds").replace(":",".")
 
     # find available directory name
     iTest = 1
