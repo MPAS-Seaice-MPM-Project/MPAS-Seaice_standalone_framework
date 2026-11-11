@@ -18,7 +18,7 @@
 
 <immutable_stream name="icebergInput"
                   type="input"
-	          filename_template="icebergs_equator.nc"
+	          filename_template="icebergs_midlatitude.nc"
 	          filename_interval="none"
                   input_interval="initial_only"
                   output_interval="none" />
@@ -32,7 +32,10 @@
         <var name="uVelocity"/>
         <var name="vVelocity"/>
         <var name="iceAreaCell"/>
+        <var name="iceVolumeCell"/>
         <var name="icePressure"/>
+        <var name="uOceanVelocityIcebergCell"/>
+        <var name="vOceanVelocityIcebergCell"/>
 </stream>
 
 <stream name="output"
@@ -56,7 +59,7 @@
         filename_template="output/icebergs_output.$Y-$M-$D_$h.$m.$s.nc"
         filename_interval="00-00-00_00:00:01"
         clobber_mode="replace_files"
-        output_interval="00-00-01_00:00:00" >
+        output_interval="00-00-00_01:00:00" >
 
         <var name="xtime"/>
         <var name="daysSinceStartOfSim"/>
@@ -102,6 +105,12 @@
         <var name="icebergForceU"/>
         <var name="icebergForceV"/>
         <var name="areaTriangle"/>
+        <var name="icebergCapturedBySeaice"/>
+        <var name="uVelocitySeaiceIceberg"/>
+        <var name="vVelocitySeaiceIceberg"/>
+        <var name="seaIcePressureIceberg"/>
+        <var name="seaIceConcentrationIceberg"/>
+        <var name="seaIceThicknessIceberg"/>
 </stream>
 
 <stream name="icebergsCalving"
