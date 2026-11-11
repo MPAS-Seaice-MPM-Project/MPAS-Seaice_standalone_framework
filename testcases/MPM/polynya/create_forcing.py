@@ -154,8 +154,8 @@ def create_forcing():
 
     varOutTime = fileout.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,nTimes):
-        timeStr = times[iTime].strftime('%04Y-%m-%d_%H:%M:%S')
-        varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'))
+        timeStr = times[iTime].isoformat(sep="_", timespec="seconds")
+        varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
 
     var = fileout.createVariable("airTemperature","d",dimensions=["Time","nCells"])
     for iTime in range(0,nTimes):
@@ -187,9 +187,9 @@ def create_forcing():
 
     varOutTime = fileout.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,nTimes):
-        timeStr = times[iTime].strftime('%04Y-%m-%d_%H:%M:%S')
+        timeStr = times[iTime].isoformat(sep="_", timespec="seconds")
         timeStr = "0000" + timeStr[4:]
-        varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'))
+        varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
 
     var = fileout.createVariable("cloudFraction","d",dimensions=["Time","nCells"])
     var[:] = cloudFraction
@@ -214,9 +214,9 @@ def create_forcing():
 
     varOutTime = fileout.createVariable("xtime","c",dimensions=["Time","StrLen"])
     for iTime in range(0,nTimes):
-        timeStr = times[iTime].strftime('%04Y-%m-%d_%H:%M:%S')
+        timeStr = times[iTime].isoformat(sep="_", timespec="seconds")
         timeStr = "0000" + timeStr[4:]
-        varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'))
+        varOutTime[iTime,0:19] = netCDF4.stringtochar(np.array(timeStr, 'S19'), encoding='ascii')
             
     var = fileout.createVariable("seaSurfaceTemperature","d",dimensions=["Time","nCells"])
     for iTime in range(0,nTimes):
