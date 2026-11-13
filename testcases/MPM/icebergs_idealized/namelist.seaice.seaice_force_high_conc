@@ -3,7 +3,7 @@
     config_calendar_type = 'noleap'
     config_start_time = '2000-01-01_00:00:00'
     config_stop_time = 'none'
-    config_run_duration = '00-06-00_00:00:00'
+    config_run_duration = '00-00-02_00:00:00'
     config_num_halos = 2
 /
 &io
@@ -159,15 +159,30 @@
     config_iceberg_wave_amplitude_coefficient = 0.010125
     config_iceberg_wavelength_cutoff_coefficient = 0.125
     config_iceberg_wavelength_upper_limit_coefficient = 0.25
+    config_iceberg_size_type = "angle_integral"
+    config_iceberg_use_conservation_check = false
+/
+&mpm_icebergs_grounding
+    config_iceberg_grounding_type = "none"
+    config_iceberg_use_grounding_sediment_force = true
+    config_iceberg_use_grounding_gravity_force = true
+    config_iceberg_use_grounding_solid_force = true
+    config_iceberg_static_speed = 1.0e-6
+    config_iceberg_scour_width = 90.0
+    config_iceberg_sediment_shear_strength = 6.0e3
+    config_iceberg_sediment_density = 1.8e3
+    config_iceberg_sediment_depth = 8.0
+/
+&mpm_icebergs_seaice_force
     config_iceberg_use_seaice_force = true
+    config_iceberg_seaice_capture_type = "force"
+    config_iceberg_seaice_force_type = "drag"
     config_iceberg_seaice_concentration_lower_limit = 0.15
+    config_iceberg_seaice_capture_force_coefficient = 1.0
     config_iceberg_seaice_concentration_capture_limit = 0.9
     config_iceberg_seaice_pressure_limit_force = 1e4
     config_iceberg_seaice_drag_coefficient = 1.0
-    config_iceberg_use_captured_force_on_sea_ice = true
-    config_iceberg_use_grounding = false
-    config_iceberg_size_type = "angle_integral"
-    config_iceberg_use_conservation_check = false
+    config_iceberg_apply_seaice_force_to_seaice = true
 /
 &column_package
     config_column_physics_type = 'icepack'

@@ -1,0 +1,293 @@
+MPM idealized iceberg testcases
+===============================
+
+Single iceberg tests of the individual terms in the iceberg momentum
+equation: air and ocean drag, Coriolis, ocean surface tilt, wave radiation,
+sea ice drag and stress forces, sea ice capture, and grounding. Each test
+switches on one force (or a small set of forces) with simple uniform forcing
+so the result can be compared with an expected, usually analytical, answer.
+
+
+Running
+-------
+
+Requirements:
+  * the standalone model built at
+    ../../../../MPAS-Seaice-MPM/components/mpas-seaice/seaice_model
+  * MPAS_SEAICE_STANDALONE_DATA set to the standalone data directory
+    (the spherical grid and graph files are linked from
+    $MPAS_SEAICE_STANDALONE_DATA/testcases/strain_stress_divergence)
+  * python with numpy, netCDF4, matplotlib and colorama
+
+Run all tests:
+  python run_testcase.py
+
+Replot a single test from existing output:
+  python plot_results.py -t <testcase>
+
+Each test writes its output to output_<testcase>/ and its plots to
+results_<testcase>*.png. The grounding (grnd_*) and sea ice stress
+(seaice_stress_*) tests also print a PASS/FAIL line for each check.
+
+
+Files
+-----
+
+run_testcase.py         writes the iceberg, initial condition and generated
+                        namelist/streams files, then runs every test
+plot_results.py         plotting for all tests
+grounding_tests.py      definitions, file generation and checks for the
+                        grnd_* tests
+seaice_stress_tests.py  definitions, file generation and checks for the
+                        seaice_stress_* tests
+
+namelist.seaice.<testcase>, streams.seaice.<testcase>
+                        namelist and streams files for the basic tests. The
+                        grnd_* files are generated from
+                        namelist/streams.seaice.grounding_force and the
+                        seaice_stress_* files from
+                        namelist/streams.seaice.seaice_force_mid_conc, so
+                        these templates must be kept in the repository.
+
+
+Common setup
+------------
+
+  Mesh             2562 cell global sphere (grid.2562.nc)
+  Iceberg          one iceberg starting at 45N, 0E (icebergs_midlatitude.nc)
+                   length 1000 m, height 1000 m, width 667 m
+                   (config_iceberg_initial_length_to_width_ratio = 1.5)
+                   density 850 kg/m^3, mass 5.67e11 kg, draft 828.5 m
+  Time step        config_dt = 3600 s, momentum velocity update
+  Grid             config_rotate_cartesian_grid = false
+  Forcing          uniform northward (v) air, ocean or sea ice velocities,
+                   so icebergs move northwards along the 0E meridian
+  Disabled         rollover, ablation (except where noted), all forces not
+                   under test
+
+Below, "north" means the v direction. Values quoted are from the current
+model and are the expected results.
+
+
+Basic force tests
+-----------------
+
+air_drag
+  Forces:   air drag only. Air velocity 1 m/s north, iceberg initially at rest.
+  Expected: the iceberg accelerates northwards towards the 1 m/s air speed.
+            Air drag is weak for an iceberg this size, so the approach is
+            slow: v = 0.016 m/s after 1 day, 0.33 m/s after 30 days and
+            0.75 m/s after 180 days. The iceberg reaches the north pole
+            (latitude pi/2) after about 120 days, where longitude jumps to pi
+            as it passes over the pole.
+
+ocean_drag
+  Forces:   ocean drag only. Ocean velocity 1 m/s north, iceberg at rest,
+            4 day run with hourly output.
+  Expected: quadratic drag gives the analytical solution
+              v(t) = U - U / (1 + k U t),  k = D / M
+            with U = 1 m/s, D the ocean drag coefficient and M the iceberg
+            mass. The model matches this to 4 decimal places
+            (v = 0.788, 0.882, 0.918, 0.937, 0.949 m/s after 1-5 hours),
+            reaching 0.997 m/s after 4 days.
+
+coriolis
+  Forces:   Coriolis only. Iceberg starts with v = 1 m/s at 45N.
+  Expected: an inertial oscillation with period 2 pi / f = 16.9 hours and
+            radius |u| / f. The implicit Coriolis treatment damps the speed
+            by a factor 1 / sqrt(1 + (f dt)^2) = 0.937 each step, so with
+            daily output the speed drops to 0.21 m/s after 1 day and
+            effectively zero after a few days. The iceberg stays close to
+            its starting position. Plots: trajectory on the sphere and speed.
+
+surface_tilt
+  Forces:   ocean surface tilt only. Ocean velocity 1 m/s north, 5 day run
+            with hourly output.
+  Expected: the geostrophic surface tilt force -M f v_ocean in the u
+            direction accelerates the iceberg westwards at a constant rate:
+              u(t) = -f v_ocean t
+            (u = -0.371, -0.743, -1.114 m/s after 1-3 hours, matching the
+            analytical value). Nothing resists this force, so the speed grows
+            without bound, reaching 44 m/s westwards after 5 days. The run is
+            kept short so the iceberg does not exceed the motion limit.
+
+wave_radiation
+  Forces:   wave radiation only. Air velocity 1 m/s north, ocean velocity
+            1 m/s south.
+  Expected: a constant 396 N northward wave radiation force with no
+            resisting force, so v grows linearly: v = F t / M, giving
+            0.011 m/s after 180 days.
+
+
+Sea ice drag and capture tests
+------------------------------
+
+These use config_iceberg_seaice_force_type = "drag" (drag on the iceberg
+width times the sea ice thickness) and config_iceberg_seaice_capture_type =
+"force" (captured if the sea ice force needed to move the iceberg with the
+sea ice is no more than pressure * iceberg width). The sea ice thickness is
+set through iceVolumeCell = concentration * 1 m. The reaction of the sea ice
+force is applied to the sea ice. Plots include the force on the iceberg and
+the total force on the sea ice, summed over vertices.
+
+seaice_force_low_conc
+  Setup:    sea ice concentration 0.01, sea ice velocity 1 m/s north,
+            pressure 0.
+  Expected: concentration is below config_iceberg_seaice_concentration_lower_limit
+            (0.15), so there is no sea ice force and the iceberg stays at
+            rest.
+
+seaice_force_mid_conc
+  Setup:    concentration 0.5, sea ice velocity 1 m/s north, pressure 0.
+  Expected: the sea ice drag (1.4e5 N after 1 day, decreasing as the
+            iceberg speeds up) accelerates the iceberg towards the sea ice
+            velocity: v = 0.19, 0.41, 0.68 and 0.81 m/s after 10, 30, 90 and
+            180 days. Zero pressure means the iceberg is never captured. The
+            force on the sea ice is equal and opposite to the force on the
+            iceberg at every step.
+
+seaice_force_high_conc
+  Setup:    concentration 0.99, sea ice velocity 0.5 m/s north, ocean
+            velocity 0.4 m/s north, pressure 4.5e4 N/m (capture limit
+            pressure * width = 3e7 N), ocean drag on, 2 day run with hourly
+            output.
+  Expected: the transition from uncaptured to captured.
+            Hours 1-5: not captured. The sea ice force needed to move the
+              iceberg with the sea ice (8.5e7 N falling to 3.1e7 N) exceeds
+              the limit, so the iceberg is accelerated by ocean and sea ice
+              drag (v = 0.24 to 0.35 m/s).
+            Hour 6: captured. The required force (2.9e7 N) falls below the
+              limit and the iceberg jumps to the 0.5 m/s sea ice velocity.
+            Hours 7-48: stays captured. The sea ice only has to hold the
+              iceberg against ocean drag (5.9e6 N).
+            results_seaice_force_high_conc_capture.png shows the velocities
+            and the implied capture force against the capture limit, with
+            the captured period shaded.
+
+
+Sea ice stress tests (seaice_stress_*)
+--------------------------------------
+
+These test config_iceberg_seaice_force_type = "stress". The variational
+scheme sea ice stresses stress11var, stress22var and stress12var are read in
+from the initial conditions stream as a uniform stress at all cell corners.
+The velocity solver is off, so the stresses stay fixed (pkgVariational is
+activated for stress icebergs for this). Only the sea ice force is active,
+with no capture or grounding, and runs are 1 day with hourly output.
+
+The expected force on the iceberg is
+  F = n * min(W sigma_c, M |du| / dt)
+where n is the direction of the sea ice velocity relative to the iceberg,
+W the iceberg width, and sigma_c = min(P, max(0, -n.sigma.n)) the
+compressive sea ice stress normal to the iceberg face, limited by the sea
+ice pressure P. The M |du| / dt limit stops the iceberg overshooting the
+sea ice velocity.
+
+  testcase                          stress (s11,s22,s12) N/m  P (N/m)  sea ice velocity  expected force
+  seaice_stress_compression         (0, -2e4, 0)              3e4      0.5 m/s north     W * 2e4 = 1.33e7 N north
+  seaice_stress_pressure_limit      (0, -2e4, 0)              1e4      0.5 m/s north     W * 1e4 = 6.7e6 N (pressure limited)
+  seaice_stress_tension             (0, +2e4, 0)              3e4      0.5 m/s north     0 (tension)
+  seaice_stress_perpendicular       (-2e4, 0, 0)              3e4      0.5 m/s north     0 (compression normal to the motion)
+  seaice_stress_isotropic_diagonal  (-2e4, -2e4, 0)           3e4      0.5 m/s at 45 deg W * 2e4 along the motion
+  seaice_stress_shear_diagonal      (0, 0, -2e4)              3e4      0.5 m/s at 45 deg W * 2e4 along the motion (n.sigma.n = sigma12)
+
+In the compression tests the force is constant for the first 5 hours, is
+reduced to M |du| / dt in hour 6 as the iceberg reaches the sea ice velocity,
+and is zero after that, with the iceberg moving at 0.5 m/s.
+
+Checks, all to rounding error:
+  * no NaN or Inf in the output
+  * sea ice stress at the iceberg equals the prescribed stress (tests the
+    vertex averaging and interpolation to the iceberg)
+  * the force at every step equals the expected force above, from the start
+    of step iceberg velocity
+  * momentum balance: M du / dt equals the sea ice force
+  * the force on the sea ice is equal and opposite to the force on the iceberg
+  * the iceberg never moves faster than the sea ice
+
+As the stress is uniform these tests do not check the kite area weighting
+used to average the corner stresses to vertices.
+
+
+Grounding tests
+---------------
+
+grounding
+  Setup:    simple grounding (config_iceberg_grounding_type = "simple").
+            Air and ocean velocity 1 m/s north, air drag only, basal melt
+            on (config_iceberg_basal_melt_coefficient = 5.0). A shallow band
+            at 700 m depth between latitudes 3pi/8 -/+ pi/16, 1100 m
+            elsewhere.
+  Expected: the iceberg drifts north and stops on the step into the
+            shallow band (day 59), where its draft (725 m) exceeds the depth.
+            As basal melt reduces the draft it creeps slowly into the band
+            (v below 0.05 m/s for several days), stopping again whenever its
+            draft exceeds the local depth, then drifts freely across the band
+            once the draft is below 700 m (day 70), leaving it at about day
+            138. With daily output only the first stop shows as zero
+            velocity.
+
+grounding_force
+  Setup:    as grounding but with force grounding
+            (config_iceberg_grounding_type = "force").
+  Expected: the iceberg drifts north and grounds on the step at day 59. The
+            sediment force (9.3e4 N) holds it stationary for 3 days. Once
+            basal melt has reduced the draft enough it breaks free (day 62)
+            and drifts across the band, leaving it at about day 140. On this
+            step bathymetry there is no bedrock contact, so the solid and
+            gravity forces stay zero. results_grounding_force_forces.png
+            shows the grounding force magnitudes.
+
+Grounding force tests (grnd_*)
+------------------------------
+
+These test the individual force grounding terms
+(config_iceberg_grounding_type = "force") following Kostov et al. (2026).
+Only ocean drag and the selected grounding forces are active, with no basal
+melt, so the iceberg draft is constant. The bathymetry is set relative to
+the iceberg draft (828.5 m) through the "penetration", the draft minus the
+ocean depth at the iceberg start:
+  * 0 < penetration <= 8 m: scour into the sediment only (sediment force)
+  * penetration > 8 m: bedrock contact with a freeboard anomaly of
+    penetration - 8 m (solid and gravity forces)
+using the default 8 m sediment depth, 90 m scour width, 6 kPa sediment shear
+strength and 1800 kg/m^3 sediment density. "flat" bathymetry is uniform and
+"ramp" bathymetry deepens northwards with the given slope. Runs are 5 days
+with hourly output.
+
+  testcase               forces on                 bathymetry      penetration  ocean v   expected
+  grnd_none_ref          none (grounding "none")   deep (1100 m)   -            0.5 m/s   reference free drift
+  grnd_none              sediment, gravity, solid  deep (1100 m)   -            0.5 m/s   all grounding forces exactly zero; identical to grnd_none_ref
+  grnd_rest              sediment, gravity, solid  flat            20 m         0         no drivers: no NaN, iceberg stays at rest
+  grnd_sediment_stuck    sediment                  flat            4 m          0.1 m/s   stays stuck; static sediment force equals the ocean drag (5.9e6 N), below its maximum (9.9e6 N)
+  grnd_sediment_stop     sediment                  flat            20 m         0         starts at v = 0.1 m/s; sediment force (3.1e7 N) exceeds M v / dt (1.6e7 N) so it stops in one step
+  grnd_sediment_partial  sediment                  flat            4 m          0.5 m/s   partial scour force 9.9e6 N; steady drift at 0.370 m/s where ocean drag balances it
+  grnd_sediment_full_10  sediment                  flat            10 m         0.5 m/s   full 8 m scour force 3.1e7 N; steady drift 0.271 m/s
+  grnd_sediment_full_20  sediment                  flat            20 m         0.5 m/s   identical to full_10: the scour depth is capped at 8 m
+  grnd_solid             solid                     flat            8.01 m       0.5 m/s   solid force equals the buoyancy deficit force, 6.7e7 N; steady drift 0.162 m/s
+  grnd_gravity           gravity                   ramp 2e-4       13 m         0         slides downslope (north) until bedrock contact ends; bathymetry gradient 1.98e-4 pointing south; force 6.6e6 N within 1% of expected
+  grnd_solid_upslope     solid                     ramp 2e-6       8.15 m       -2 m/s    pushed upslope; freeboard anomaly grows until the solid force balances the drag; iceberg slows to near rest
+  grnd_solid_downslope   solid                     ramp 2e-6       8.15 m       2 m/s     moves downslope; bedrock contact ends and the iceberg drifts freely at the ocean velocity
+  grnd_all_ramp          sediment, gravity, solid  ramp 2e-4       7.58 m       1 m/s     moving downslope the solid force ends (step 2) before the sediment force (step 15), then free drift at the ocean velocity
+
+Expected forces, with s the scour depth (penetration limited to 0-8 m) and a
+the freeboard anomaly (penetration - 8 m, if positive):
+  sediment  F = (1/2) g (rho_sed - rho_w) s^2 w + 2 tau s w + (1/sqrt(2)) tau s^2
+  solid     F = M (rho_w / rho_i) (a / H) g cos(beta) cos(alpha)
+  gravity   F = M (rho_w / rho_i) (a / H) g sin(beta) cos(beta), downslope
+with w the scour width, tau the sediment shear strength, H the iceberg
+height, beta the slope angle and alpha the trajectory angle relative to the
+slope. The steady drift speed is where ocean drag balances the dissipative
+force: v = v_ocean - sqrt(F / D).
+
+grnd_all_ramp uses 7.58 m rather than 8.05 m because interpolating the ramp
+bathymetry to the iceberg position adds about 0.47 m to the penetration for
+a 2e-4 slope.
+
+Checks for every test:
+  * no NaN or Inf in the output
+  * the dissipative (sediment and solid) forces oppose the iceberg motion
+  * the iceberg velocity never reverses direction
+plus the test specific checks listed above. On grounded (stopped) steps the
+stored grounding force is the force needed to stop the iceberg, so the
+iceberg momentum balance closes exactly on those steps.
