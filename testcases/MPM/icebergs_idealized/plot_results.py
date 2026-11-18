@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from math import sqrt
 import numpy as np
 import argparse
+from grounding_tests import groundingTestcases, plot_grounding_test
+from seaice_stress_tests import seaiceStressTestcases, plot_seaice_stress_test
 
 #-------------------------------------------------------------------------------
 
@@ -244,9 +246,84 @@ def plot_seaice_forces(testcase):
 
 #-------------------------------------------------------------------------------
 
-def plot_grounding(uColor, vColor):
+def plot_seaice_capture(testcase):
 
-    filenames = sorted(glob.glob("./output_grounding/icebergs_output.*"))
+    # Transition from uncaptured to captured iceberg: capture when the sea ice force
+    # needed to move the iceberg with the sea ice is below pressure * width.
+    # The implied capture force is recalculated here assuming ocean drag is the
+    # only other active force and hourly output at the model time step.
+
+    from grounding_tests import GroundingPhysics, read_namelist
+
+    physics = GroundingPhysics(read_namelist("namelist.seaice.%s" %(testcase)))
+
+    filenames = sorted(glob.glob("./output_%s/icebergs_output.*" %(testcase)))
+
+    times = []
+    vIcebergs = []
+    vSeaices = []
+    vOceans = []
+    captured = []
+    seaiceForces = []
+    captureLimits = []
+
+    for filename in filenames:
+
+        filein = Dataset(filename,"r")
+
+        times.append(filein.variables["daysSinceStartOfSim"][0] * 24.0)
+        vIcebergs.append(filein.variables["vVelocityIceberg"][0,0])
+        vSeaices.append(filein.variables["vVelocitySeaiceIceberg"][0,0])
+        vOceans.append(filein.variables["vOceanVelocityIceberg"][0,0])
+        captured.append(filein.variables["icebergCapturedBySeaice"][0,0])
+        seaiceForces.append(sqrt(filein.variables["uSeaiceForceIceberg"][0,0]**2 +
+                                 filein.variables["vSeaiceForceIceberg"][0,0]**2))
+        icebergWidth = filein.variables["icebergVolume"][0,0] / \
+            (filein.variables["icebergLength"][0,0] * filein.variables["icebergHeight"][0,0])
+        captureLimits.append(filein.variables["seaIcePressureIceberg"][0,0] * icebergWidth)
+
+        filein.close()
+
+    captured = np.array(captured)
+
+    # sea ice force needed for the iceberg to move with the sea ice over each step
+    vIcebergsInit = np.concatenate(([0.0], vIcebergs[:-1]))
+    vSeaices = np.array(vSeaices)
+    vOceans = np.array(vOceans)
+    impliedForces = np.abs(physics.icebergMass * (vSeaices - vIcebergsInit) / physics.dt -
+                           physics.oceanDragCoefficient * np.abs(vOceans - vSeaices) * (vOceans - vSeaices))
+
+    fig, axes = plt.subplots(2, 1, figsize=(7,7), sharex=True)
+
+    axes[0].plot(times, vIcebergs, color="red", marker="x", label="vVelocityIceberg")
+    axes[0].plot(times, vSeaices, color="blue", linestyle="dashed", label="vVelocitySeaiceIceberg")
+    axes[0].plot(times, vOceans, color="green", linestyle="dotted", label="vOceanVelocityIceberg")
+    axes[0].set_ylabel("Velocity (m/s)")
+    axes[0].legend(loc="lower right")
+
+    axes[1].plot(times, impliedForces, color="blue", marker="+", label="implied capture force")
+    axes[1].plot(times, seaiceForces, color="red", marker="x", label="|sea ice force| applied")
+    axes[1].plot(times, captureLimits, color="black", linestyle="dashed", label="capture limit")
+    axes[1].set_yscale("log")
+    axes[1].set_ylabel("Force (N)")
+    axes[1].set_xlabel("Time (hours)")
+    axes[1].legend(loc="center right")
+
+    for axis in axes:
+        if (np.any(captured == 1)):
+            axis.axvspan(times[np.argmax(captured == 1)], times[-1], color="grey", alpha=0.2)
+
+    axes[0].set_title("Sea ice capture (shaded: captured)")
+
+    plt.tight_layout()
+
+    plt.savefig("results_%s_capture.png" %(testcase),dpi=300)
+
+#-------------------------------------------------------------------------------
+
+def plot_grounding(testcase, uColor, vColor):
+
+    filenames = sorted(glob.glob("./output_%s/icebergs_output.*" %(testcase)))
 
     filein = Dataset(filenames[0],"r")
     time1 = filein.variables["daysSinceStartOfSim"][0]
@@ -312,7 +389,7 @@ def plot_grounding(uColor, vColor):
     axis2.legend(loc="lower right")
     axis3.legend(loc="lower left")
 
-    axis.set_title("Position/velocity grounding")
+    axis.set_title("Position/velocity %s" %(testcase))
 
     axis.set_xlabel("Time (days)")
 
@@ -322,33 +399,90 @@ def plot_grounding(uColor, vColor):
 
     plt.tight_layout()
 
-    plt.savefig("results_grounding.png",dpi=300)
+    plt.savefig("results_%s.png" %(testcase),dpi=300)
+
+#-------------------------------------------------------------------------------
+
+def plot_grounding_forces(testcase):
+
+    filenames = sorted(glob.glob("./output_%s/icebergs_output.*" %(testcase)))
+
+    filein = Dataset(filenames[0],"r")
+    time1 = filein.variables["daysSinceStartOfSim"][0]
+    filein.close()
+
+    filein = Dataset(filenames[1],"r")
+    time2 = filein.variables["daysSinceStartOfSim"][0]
+    filein.close()
+
+    dt = time2-time1
+    times = np.arange(0,len(filenames)) * dt
+
+    forceNames = ["Grounding", "GrndSediment", "GrndGravity", "GrndSolid"]
+
+    forces = {}
+    for forceName in forceNames:
+        forces[forceName] = []
+
+    for filename in filenames:
+
+        filein = Dataset(filename,"r")
+
+        for forceName in forceNames:
+            uForce = filein.variables["u%sForceIceberg" %(forceName)][0,0]
+            vForce = filein.variables["v%sForceIceberg" %(forceName)][0,0]
+            forces[forceName].append(np.sqrt(uForce**2 + vForce**2))
+
+        filein.close()
+
+    fig, axis = plt.subplots()
+
+    for forceName in forceNames:
+        axis.plot(times, forces[forceName], label=forceName)
+
+    axis.set_title("Grounding force magnitudes")
+
+    axis.legend()
+    axis.set_xlabel("Time (days)")
+    axis.set_ylabel("Force (N)")
+
+    plt.tight_layout()
+
+    plt.savefig("results_%s_forces.png" %(testcase),dpi=300)
 
 #-------------------------------------------------------------------------------
 
 def plot_testcase(testcase):
 
     if (testcase == "air_drag"):
-        plot_figure("air_drag","green","red")
+        plot_figure("air_drag","red","green")
     elif (testcase == "ocean_drag"):
-        plot_figure("ocean_drag","green","red")
+        plot_figure("ocean_drag","red","green")
     elif (testcase == "surface_tilt"):
         plot_figure("surface_tilt","red","green")
     elif (testcase == "wave_radiation"):
-        plot_figure("wave_radiation","green","red")
+        plot_figure("wave_radiation","red","green")
     elif (testcase == "coriolis"):
         plot_coriolis()
     elif (testcase == "seaice_force_low_conc"):
-        plot_figure("seaice_force_low_conc","green","red")
+        plot_figure("seaice_force_low_conc","red","green")
         plot_seaice_forces("seaice_force_low_conc")
     elif (testcase == "seaice_force_mid_conc"):
-        plot_figure("seaice_force_mid_conc","green","red")
+        plot_figure("seaice_force_mid_conc","red","green")
         plot_seaice_forces("seaice_force_mid_conc")
     elif (testcase == "seaice_force_high_conc"):
-        plot_figure("seaice_force_high_conc","green","red")
+        plot_figure("seaice_force_high_conc","red","green")
         plot_seaice_forces("seaice_force_high_conc")
+        plot_seaice_capture("seaice_force_high_conc")
     elif (testcase == "grounding"):
-        plot_grounding("green","red")
+        plot_grounding("grounding","red","green")
+    elif (testcase == "grounding_force"):
+        plot_grounding("grounding_force","red","green")
+        plot_grounding_forces("grounding_force")
+    elif (testcase in groundingTestcases):
+        plot_grounding_test(testcase)
+    elif (testcase in seaiceStressTestcases):
+        plot_seaice_stress_test(testcase)
 
 #-------------------------------------------------------------------------------
 
@@ -367,7 +501,9 @@ def plot_results(testcase):
                      "coriolis",
                      "seaice_force_low_conc",
                      "seaice_force_mid_conc",
-                     "seaice_force_high_conc"]
+                     "seaice_force_high_conc",
+                     "grounding",
+                     "grounding_force"] + groundingTestcases + seaiceStressTestcases
 
         for testcase in testcases:
             plot_testcase(testcase)

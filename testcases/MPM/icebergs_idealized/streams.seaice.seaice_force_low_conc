@@ -18,7 +18,7 @@
 
 <immutable_stream name="icebergInput"
                   type="input"
-	          filename_template="icebergs_equator.nc"
+	          filename_template="icebergs_midlatitude.nc"
 	          filename_interval="none"
                   input_interval="initial_only"
                   output_interval="none" />
@@ -32,6 +32,7 @@
         <var name="uVelocity"/>
         <var name="vVelocity"/>
         <var name="iceAreaCell"/>
+        <var name="iceVolumeCell"/>
         <var name="icePressure"/>
 </stream>
 
@@ -102,6 +103,7 @@
         <var name="icebergForceU"/>
         <var name="icebergForceV"/>
         <var name="areaTriangle"/>
+        <var name="seaIceThicknessIceberg"/>
 </stream>
 
 <stream name="icebergsCalving"

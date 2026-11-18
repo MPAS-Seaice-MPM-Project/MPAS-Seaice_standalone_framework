@@ -18,7 +18,7 @@
 
 <immutable_stream name="icebergInput"
                   type="input"
-	          filename_template="icebergs_equator.nc"
+	          filename_template="icebergs_midlatitude.nc"
 	          filename_interval="none"
                   input_interval="initial_only"
                   output_interval="none" />

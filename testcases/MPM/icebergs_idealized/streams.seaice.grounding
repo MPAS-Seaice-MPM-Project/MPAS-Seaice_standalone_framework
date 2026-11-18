@@ -18,7 +18,7 @@
 
 <immutable_stream name="icebergInput"
                   type="input"
-	          filename_template="icebergs_equator.nc"
+	          filename_template="icebergs_midlatitude.nc"
 	          filename_interval="none"
                   input_interval="initial_only"
                   output_interval="none" />
@@ -100,27 +100,6 @@
         <var name="icebergCategory"/>
         <var name="icebergBathymetry"/>
         <var name="icebergBasalMeltRate"/>
-</stream>
-
-<stream name="icebergsCalving"
-        type="input"
-        filename_template="calving_mpas.nc"
-        filename_interval="none"
-        input_interval="initial_only">
-
-        <var name="calvingRate"/>
-</stream>
-
-<stream name="icebergCategories"
-        type="input"
-        filename_template="iceberg_categories.nc"
-        filename_interval="none"
-        input_interval="initial_only">
-
-        <var name="icebergCategoryLength"/>
-        <var name="icebergCategoryHeight"/>
-        <var name="icebergCategoryFluxScaling"/>
-        <var name="icebergCategoryCalvingFraction"/>
 </stream>
 
 <immutable_stream name="LYqSixHourlyForcing"
