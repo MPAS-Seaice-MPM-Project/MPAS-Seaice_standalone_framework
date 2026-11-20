@@ -126,10 +126,18 @@
     config_mpm_polympo_init_test = false
 /
 &mpm_icebergs
-    config_iceberg_read_in_from_file_at_start = true
-    config_iceberg_initial_height = 250.0
     config_iceberg_minimum_array_size = 16
     config_iceberg_array_growth_factor = 1.5
+    config_iceberg_coastal_movement_type = "fixed"
+    config_iceberg_use_rollover = false
+    config_iceberg_max_number_of_rollovers = 5
+    config_iceberg_density = 850.0
+    config_iceberg_size_type = "angle_integral"
+    config_iceberg_use_conservation_check = false
+/
+&mpm_icebergs_creation
+    config_iceberg_read_in_from_file_at_start = true
+    config_iceberg_initial_height = 250.0
     config_minimum_iceberg_area = 1e6
     config_maximum_iceberg_area = 1e6
     config_iceberg_area_pdf_exponent_physical = -1.5
@@ -137,15 +145,15 @@
     config_iceberg_initial_length_to_width_ratio = 1.5
     config_create_icebergs_during_simulation = false
     config_iceberg_generation_type = "category"
+/
+&mpm_icebergs_ablation
     config_iceberg_use_surface_wave_ablation = false
     config_iceberg_use_bouyant_convection_ablation = false
     config_iceberg_use_basal_melt_ablation = true
     config_iceberg_basal_melt_coefficient = 5.0
+/
+&mpm_icebergs_velocity
     config_iceberg_velocity_update_type = "momentum"
-    config_iceberg_coastal_movement_type = "fixed"
-    config_iceberg_use_rollover = false
-    config_iceberg_max_number_of_rollovers = 5
-    config_iceberg_density = 850.0
     config_iceberg_use_coriolis_force = false
     config_iceberg_use_air_drag_force = true
     config_iceberg_air_form_drag_coefficient = 0.9
@@ -160,8 +168,6 @@
     config_iceberg_wave_amplitude_coefficient = 0.010125
     config_iceberg_wavelength_cutoff_coefficient = 0.125
     config_iceberg_wavelength_upper_limit_coefficient = 0.25
-    config_iceberg_size_type = "angle_integral"
-    config_iceberg_use_conservation_check = false
 /
 &mpm_icebergs_grounding
     config_iceberg_grounding_type = "force"
